@@ -57,10 +57,10 @@ describe("QuizPart", () => {
     expect(screen.getByRole("button", { name: "Xong phần 2" })).toBeEnabled();
   });
 
-  it("offers the result button on the last part instead", () => {
+  it("ends the last part like the others — the result button lives on its summary screen", () => {
     render(<QuizPart {...base} part={3} responses={responsesFor(3, ALL_TEN)} />);
-    expect(screen.getByRole("button", { name: "Xem kết quả" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Xong phần/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Xong phần 4" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Xem kết quả" })).not.toBeInTheDocument();
   });
 
   it("hides the back button on the first part", () => {

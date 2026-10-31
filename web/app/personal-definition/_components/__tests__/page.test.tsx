@@ -105,17 +105,15 @@ describe("full quiz flow", () => {
       }
 
       const isLastPart = part === PART_COUNT - 1;
-      fireEvent.click(
-        screen.getByRole("button", { name: isLastPart ? "Xem kết quả" : `Xong phần ${part + 1}` }),
-      );
+      fireEvent.click(screen.getByRole("button", { name: `Xong phần ${part + 1}` }));
 
-      if (!isLastPart) {
-        teaserSeen.push(screen.queryByTestId("teaser") !== null);
-        fireEvent.click(screen.getByRole("button", { name: "Đi tiếp" }));
-      }
+      // Every part ends on a summary; the last one's button opens the result.
+      teaserSeen.push(screen.queryByTestId("teaser") !== null);
+      expect(screen.getByTestId("interlude-line").textContent).toMatch(/Bạn (nghiêng về|khá cân bằng)/);
+      fireEvent.click(screen.getByRole("button", { name: isLastPart ? "Xem kết quả" : "Đi tiếp" }));
     }
 
-    expect(teaserSeen).toEqual([false, true, false]);
+    expect(teaserSeen).toEqual([false, true, false, false]);
     expect(screen.getByText("Bốn chiều của bạn")).toBeInTheDocument();
   }, 15_000);
 });

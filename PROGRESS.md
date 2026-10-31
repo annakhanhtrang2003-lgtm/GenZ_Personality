@@ -10,14 +10,16 @@ Branch: `feature/personal-definition/ui`. North Star: see `CLAUDE.md`.
 | 1 | Landing: carousel nhỏ lại, ~2.5 thẻ trên mobile, cả 4 trên desktop (md+), tự cuộn chậm | ✅ | `91e225a` |
 | 2 | Bấm thẻ để vào bài test (hover/active, cursor, Enter, vuốt không kích hoạt) | ✅ | `1f470af` |
 | 3 | CTA mobile: hiện không cần cuộn ở 375×667 / 390×844 / 360×740 + sticky dự phòng có safe-area | ✅ | `d90af5b` |
-| 4 | Màn nghỉ: tóm tắt sau mỗi phần | ⏸ **Chờ duyệt nội dung** `docs/interlude-copy.md` (+3 câu hỏi) | `c9b8c2e` (chỉ doc) |
+| 4 | Màn nghỉ: tóm tắt sau mỗi phần (phần 1→4) + chữ hiện dần `I _ _ _` + câu gợi mở phần sau | ✅ đã code; nội dung từng câu vẫn chờ Khanh duyệt | `c9b8c2e` (doc), xem commit feat(interlude) |
 | 5 | Màn nghỉ: bỏ chữ hồng, chuyển sang chữ trung tính | ✅ | `04fda27` |
 
 **Kiểm tra:** 329/329 test, `tsc --noEmit` sạch, `next build` pass. **Không có script lint** (không cài ESLint), nên chưa chạy lint.
 Kiểm tra trong trình duyệt (Playwright, bản build production): đo được 2.5 thẻ ở cả 3 viewport, CTA nằm trong màn hình; sticky ẩn ở hero / hiện khi CTA khuất / ẩn ở cuối trang; tự cuộn chạy, dừng tại chỗ khi chạm, không chạy khi bật reduced motion; tap và Enter trên thẻ đều mở form.
 Ảnh trước/sau: `docs/screenshots/2026-10-31-feedback-round/`.
 
-**Chưa deploy.** Live site vẫn là bản 10-01.
+Thêm sau đó: câu hỏi chữ đen đậm (`16c4792`).
+
+**Chưa deploy lên Vercel.** Bản mới đang chạy ở localhost:3000 (production build). Live site vẫn là bản 10-01.
 
 ### Ghi chú
 - Thẻ carousel bỏ dòng mô tả dài và tên cực (tên cực vẫn còn cho screen reader); thanh chấm và dòng "Vuốt ngang" ẩn từ md trở lên (cả 4 thẻ đã vừa màn hình).

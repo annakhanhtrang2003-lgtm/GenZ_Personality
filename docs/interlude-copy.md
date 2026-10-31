@@ -1,6 +1,8 @@
-# Màn nghỉ — nội dung tóm tắt sau mỗi phần (CHỜ DUYỆT)
+# Màn nghỉ — nội dung tóm tắt sau mỗi phần
 
-> Trạng thái: **bản nháp, chưa code.** Duyệt xong nội dung + 3 câu hỏi ở cuối thì mới làm.
+> Trạng thái: **đã code (2026-10-31)** theo yêu cầu của Khanh ("từ phần 1 tới phần 4, có gợi ý / kết luận ngắn để kéo người dùng đi tiếp"). Nội dung bên dưới vẫn là bản nháp, chưa duyệt từng câu. Sửa ở đây **và** trong `web/app/personal-definition/_lib/interludeCopy.ts`.
+>
+> Đã chốt khi code: câu hỏi 1 → **(a)**, thêm màn nghỉ sau phần 4 (nút "Xem kết quả"; nút cuối phần 4 trong bài đổi thành "Xong phần 4"). Câu hỏi 2 → giữ fact dùng chung. Câu hỏi 3 → tóm tắt nằm trên ô cung/số. Thêm **câu gợi mở phần sau** = câu hỏi của thẻ phần đó ở landing (`PART_HOOKS`); sau phần 4 dùng `RESULT_HOOK`.
 
 ## Cách chọn câu (đề xuất)
 

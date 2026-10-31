@@ -5,19 +5,13 @@ import { PART_THEMES } from "../../_lib/partTheme";
 import { PART_SIZE } from "../../_lib/parts";
 import { QUESTION_COUNT } from "../../_lib/likert";
 import { srcOf } from "../../_lib/mascot";
+import { PART_HOOKS } from "../../_lib/interludeCopy";
 
 export const PREVIEW_ID = "pd-quiz-preview";
 
-/**
- * Card title per part, index = part (same order as PART_THEMES). Cards are
- * sized for ~2.5 per phone screen, so the longer description line was cut.
- */
-const CARDS = [
-  { title: "Sóng não cực mạnh hay cần sạc pin?" },
-  { title: "Thực tế phũ phàng hay hệ tâm linh?" },
-  { title: "Não nhảy số hay tim lên tiếng?" },
-  { title: "Kế hoạch 5 năm hay nước đến chân mới nhảy?" },
-] as const;
+// Card titles are PART_HOOKS (index = part, same order as PART_THEMES) —
+// shared with the break screen's "what's next" line. Cards are sized for
+// ~2.5 per phone screen, so the longer description line was cut.
 
 /** Track's inline padding; card offsets are measured from it. */
 const TRACK_PAD = 24;
@@ -290,7 +284,7 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
                     onClick={onCardClick}
                     className="text-left cursor-pointer after:absolute after:inset-0 after:rounded-[18px] after:content-[''] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#ec4899]"
                   >
-                    {CARDS[i]!.title}
+                    {PART_HOOKS[i]}
                   </button>
                 </h3>
               </article>

@@ -128,17 +128,17 @@ export function reducer(state: State, action: Action): State {
       if (state.phase !== "quiz") return state;
       const complete = indicesOfPart(state.part).every((i) => state.responses[i] !== null);
       if (!complete) return state;
-      // The last part has no interlude after it — it goes straight to the
-      // profile. FINISH re-checks all 40 rather than trusting the per-part
-      // gates, so the "every response present" contract has one owner.
-      if (state.part >= PART_COUNT - 1) return reducer(state, { type: "FINISH" });
+      // Every part, the last included, ends on an interlude with that
+      // part's summary; the last one's CONTINUE builds the profile.
       return { ...state, phase: "interlude" };
     }
 
     case "CONTINUE": {
       if (state.phase !== "interlude") return state;
       const next = state.part + 1;
-      if (next >= PART_COUNT) return state;
+      // FINISH re-checks all 40 rather than trusting the per-part gates, so
+      // the "every response present" contract has one owner.
+      if (next >= PART_COUNT) return reducer(state, { type: "FINISH" });
       return { ...state, phase: "quiz", part: next, open: firstIndexOfPart(next) };
     }
 

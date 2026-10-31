@@ -30,7 +30,6 @@ export function QuizPart({
   const indices = indicesOfPart(part);
   const answered = indices.filter((i) => responses[i] !== null).length;
   const complete = answered === PART_SIZE;
-  const isLastPart = part === PART_COUNT - 1;
   const theme = PART_THEMES[part]!;
 
   // Set right before a pointer-triggered ANSWER, so the effect below knows
@@ -120,7 +119,7 @@ export function QuizPart({
           <span />
         )}
         <Button onClick={onFinishPart} disabled={!complete}>
-          {isLastPart ? "Xem kết quả" : `Xong phần ${part + 1}`}
+          {`Xong phần ${part + 1}`}
         </Button>
       </div>
     </div>

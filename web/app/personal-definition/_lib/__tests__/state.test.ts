@@ -168,10 +168,19 @@ describe("quiz navigation", () => {
     expect(s.part).toBe(0);
   });
 
-  it("FINISH_PART on the last part builds the profile instead", () => {
+  it("FINISH_PART on the last part also enters its interlude (the part-4 summary)", () => {
     const all = initialState.responses.map(() => 0 as Response);
     const last = { ...initialState, phase: "quiz" as const, input: validInput, part: PART_COUNT - 1, responses: all };
     const s = reducer(last, { type: "FINISH_PART" });
+    expect(s.phase).toBe("interlude");
+    expect(s.part).toBe(PART_COUNT - 1);
+    expect(s.profile).toBeNull();
+  });
+
+  it("CONTINUE from the last interlude builds the profile", () => {
+    const all = initialState.responses.map(() => 0 as Response);
+    const lastInterlude = { ...initialState, phase: "interlude" as const, input: validInput, part: PART_COUNT - 1, responses: all };
+    const s = reducer(lastInterlude, { type: "CONTINUE" });
     expect(s.phase).toBe("synthesis");
     expect(s.profile).not.toBeNull();
   });

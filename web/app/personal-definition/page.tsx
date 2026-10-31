@@ -6,6 +6,7 @@ import type { Input } from "./_lib/state";
 import { TEASER_PART } from "./_lib/parts";
 import { calculateZodiac } from "./_lib/zodiac";
 import { calculateNumerology } from "./_lib/numerology";
+import { summarizePart, revealedLetters } from "./_lib/partSummary";
 import { Hero } from "./_components/onboarding/Hero";
 import { QuizPreview } from "./_components/onboarding/QuizPreview";
 import { OnboardingForm } from "./_components/OnboardingForm";
@@ -102,6 +103,8 @@ export default function PersonalDefinitionPage() {
       {state.phase === "interlude" && (
         <InterludeView
           part={state.part}
+          summary={summarizePart(state.part, state.responses).text}
+          letters={revealedLetters(state.part, state.responses)}
           preview={state.part === TEASER_PART ? preview : undefined}
           onContinue={() => dispatch({ type: "CONTINUE" })}
           onBack={() => dispatch({ type: "BACK" })}
