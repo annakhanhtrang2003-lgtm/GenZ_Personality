@@ -28,6 +28,7 @@ describe("summarizePart", () => {
     expect(s.clear).toBe(true);
     expect(s.n).toBe(7);
     expect(s.text).toContain("Hướng nội (7/10)");
+    expect(s.tip.length).toBeGreaterThan(0);
   });
 
   it("calls 6-4 balanced and shows no count", () => {
@@ -70,14 +71,16 @@ describe("revealedLetters", () => {
 });
 
 describe("interlude copy", () => {
-  it("has a clear line (with {n}) and a balanced line for all 8 letters, each at most 2 sentences", () => {
+  it("has a one-sentence conclusion + one-sentence 'mách nhỏ' tip, clear and balanced, for all 8 letters", () => {
     for (const letter of ["E", "I", "S", "N", "T", "F", "J", "P"]) {
       const c = SUMMARY_COPY[letter]!;
-      expect(c.clear).toContain("{n}/10");
-      expect(c.balanced).not.toContain("{n}");
-      for (const line of [c.clear, c.balanced]) {
+      expect(c.clear.text).toContain("{n}/10");
+      expect(c.balanced.text).not.toContain("{n}");
+      for (const line of [c.clear.text, c.clear.tip, c.balanced.text, c.balanced.tip]) {
         const sentences = line.split(/[.!?](?:\s|$)/).filter((x) => x.trim());
-        expect(sentences.length).toBeLessThanOrEqual(2);
+        expect(sentences.length).toBe(1);
+        // The label is rendered by the view; the copy must not repeat it.
+        expect(line).not.toMatch(/fun fact|mách nhỏ/i);
       }
     }
   });
@@ -90,7 +93,10 @@ describe("interlude copy", () => {
 
 describe("interlude copy voice", () => {
   it("never strings sentences together with a dash", () => {
-    const lines = [...Object.values(SUMMARY_COPY).flatMap((c) => [c.clear, c.balanced]), RESULT_HOOK];
+    const lines = [
+      ...Object.values(SUMMARY_COPY).flatMap((c) => [c.clear.text, c.clear.tip, c.balanced.text, c.balanced.tip]),
+      RESULT_HOOK,
+    ];
     for (const line of lines) expect(line).not.toMatch(/[—–]| - /);
   });
 });

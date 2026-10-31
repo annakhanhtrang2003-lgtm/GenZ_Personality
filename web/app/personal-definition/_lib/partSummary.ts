@@ -17,6 +17,8 @@ export interface PartSummary {
   n: number;
   clear: boolean;
   text: string;
+  /** Shown under the "Mách nhỏ" label. */
+  tip: string;
 }
 
 /**
@@ -46,14 +48,15 @@ export function summarizePart(part: number, responses: readonly (Response | null
   const letter = s > 0 ? poles.first : s < 0 ? poles.second : questionBank.defaults[dimension];
   const n = letter === poles.first ? towardFirst : towardSecond;
   const clear = n >= CLEAR_LEAN;
-  const copy = SUMMARY_COPY[letter]!;
+  const line = clear ? SUMMARY_COPY[letter]!.clear : SUMMARY_COPY[letter]!.balanced;
 
   return {
     letter,
     poleName: POLE_NAMES[letter]!,
     n,
     clear,
-    text: clear ? copy.clear.replace("{n}", String(n)) : copy.balanced,
+    text: line.text.replace("{n}", String(n)),
+    tip: line.tip,
   };
 }
 

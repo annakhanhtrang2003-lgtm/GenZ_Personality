@@ -17,7 +17,7 @@ Branch: `feature/personal-definition/ui`. North Star: see `CLAUDE.md`.
 Kiểm tra trong trình duyệt (Playwright, bản build production): đo được 2.5 thẻ ở cả 3 viewport, CTA nằm trong màn hình; sticky ẩn ở hero / hiện khi CTA khuất / ẩn ở cuối trang; tự cuộn chạy, dừng tại chỗ khi chạm, không chạy khi bật reduced motion; tap và Enter trên thẻ đều mở form.
 Ảnh trước/sau: `docs/screenshots/2026-10-31-feedback-round/`.
 
-Thêm sau đó: câu hỏi chữ đen đậm (`16c4792`); form chỉ hỏi tên hiển thị, bỏ họ tên đầy đủ (`3e2ba30`); màn nghỉ dùng màu + mascot đầy đủ của thẻ phần, có animation, chữ đậm, copy Gen Z không gạch ngang.
+Thêm sau đó: câu hỏi chữ đen đậm (`16c4792`); form chỉ hỏi tên hiển thị, bỏ họ tên đầy đủ (`3e2ba30`); màn nghỉ dùng màu + mascot đầy đủ của thẻ phần, chữ đậm, copy Gen Z không gạch ngang; tách 2 khối (thẻ mascot nhỏ hơn + thẻ kết luận), confetti + bong bóng chúc mừng, ô "💡 Mách nhỏ".
 
 **Chưa deploy lên Vercel.** Bản mới đang chạy ở localhost:3000 (production build). Live site vẫn là bản 10-01.
 

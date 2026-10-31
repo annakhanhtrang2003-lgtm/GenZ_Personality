@@ -103,7 +103,7 @@ export default function PersonalDefinitionPage() {
       {state.phase === "interlude" && (
         <InterludeView
           part={state.part}
-          summary={summarizePart(state.part, state.responses).text}
+          summary={summarizePart(state.part, state.responses)}
           letters={revealedLetters(state.part, state.responses)}
           preview={state.part === TEASER_PART ? preview : undefined}
           onContinue={() => dispatch({ type: "CONTINUE" })}

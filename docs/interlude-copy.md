@@ -16,7 +16,7 @@ Mỗi phần = 10 câu của đúng 1 chiều. Mỗi câu trả lời là −2�
 - Chữ cái được hé lộ = chữ của engine: dấu của `S = Σ(r × key)`, hoà thì về cực mặc định (I, N, F, P). Vì vậy chữ ở màn nghỉ **luôn trùng** chữ ở kết quả cuối.
 - Lý do bảo đảm khớp: nếu `n ≥ 7` thì phía đó được ít nhất +7, phía kia nhiều nhất 3 câu × −2 = −6, nên `S` không thể đổi dấu. Ở trường hợp cân bằng mình không hiện con số, nên không có chuyện "7/10 nghiêng E nhưng kết quả ra I".
 
-Mỗi kết luận tối đa 2 câu, giọng Gen Z, **không dùng gạch ngang nối câu** (có test kiểm tra). Câu 1 = kết luận, câu 2 = "fun fact". Các fact **diễn giải lại định nghĩa cực trong `questions.json`** (pole_definitions), không phải số liệu thống kê, nên không bịa nghiên cứu nào.
+Mỗi màn có 1 câu **kết luận** (chữ đậm) + 1 câu **"Mách nhỏ"** (ô riêng bên dưới). Giọng Gen Z, **không dùng gạch ngang nối câu** (có test kiểm tra).
 
 `{n}` = số câu nghiêng. Ô khoá MBTI hiện dần: sau phần 1 `I _ _ _`, sau phần 2 `I N _ _`, sau phần 3 `I N T _`.
 
@@ -24,39 +24,39 @@ Mỗi kết luận tối đa 2 câu, giọng Gen Z, **không dùng gạch ngang 
 
 ## Phần 1 — E · I (Bạn giữa mọi người)
 
-| Hướng | Mức | Nội dung |
-|---|---|---|
-| **E** Hướng ngoại | Rõ | Bạn nghiêng hẳn về Hướng ngoại ({n}/10), đông người là pin full vạch. Fun fact: hội Hướng ngoại hay vừa nói vừa nghĩ, nói ra rồi mới biết mình nghĩ gì. |
-| **E** Hướng ngoại | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Hướng ngoại nha. Quẩy được mà chill một mình cũng ok, kiểu này người ta gọi là ambivert đó. |
-| **I** Hướng nội | Rõ | Bạn nghiêng hẳn về Hướng nội ({n}/10), sạc pin bằng giờ me-time. Fun fact: hướng nội không phải là ngại người đâu, chỉ là bạn thích nghĩ kỹ rồi mới nói. |
-| **I** Hướng nội | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Hướng nội nha. Đi tiệc vẫn vui nhưng về nhà nằm mới là chân ái, kiểu này người ta gọi là ambivert đó. |
+| Hướng | Mức | Kết luận | 💡 Mách nhỏ |
+|---|---|---|---|
+| **E** Hướng ngoại | Rõ | Bạn nghiêng hẳn về Hướng ngoại ({n}/10), đông người là pin full vạch. | Hội Hướng ngoại hay vừa nói vừa nghĩ, nói ra rồi mới biết mình nghĩ gì. |
+| **E** Hướng ngoại | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Hướng ngoại nha, quẩy được mà chill một mình cũng ok. | Kiểu tuỳ mood này có tên hẳn hoi đó: ambivert. |
+| **I** Hướng nội | Rõ | Bạn nghiêng hẳn về Hướng nội ({n}/10), sạc pin bằng giờ me-time. | Hướng nội không phải là ngại người đâu, chỉ là bạn thích nghĩ kỹ rồi mới nói. |
+| **I** Hướng nội | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Hướng nội nha, đi tiệc vẫn vui nhưng về nhà nằm mới là chân ái. | Kiểu tuỳ mood này có tên hẳn hoi đó: ambivert. |
 
 ## Phần 2 — S · N (Cách bạn tiếp nhận)
 
-| Hướng | Mức | Nội dung |
-|---|---|---|
-| **S** Thực tế | Rõ | Bạn nghiêng hẳn về Thực tế ({n}/10), mắt thấy tai nghe mới tin. Fun fact: thấy tin hot là bạn hỏi "nguồn đâu?" đầu tiên. |
-| **S** Thực tế | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Thực tế nha. Chân chạm đất mà đầu thỉnh thoảng vẫn bay, đọc được cả chi tiết lẫn ý ngầm luôn. |
-| **N** Trực giác | Rõ | Bạn nghiêng hẳn về Trực giác ({n}/10), nhìn đâu cũng thấy bức tranh lớn. Fun fact: não bạn lúc nào cũng mở sẵn 10 tab "lỡ như thì sao". |
-| **N** Trực giác | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Trực giác nha. Mơ to nhưng vẫn check kỹ, đọc được cả chi tiết lẫn ý ngầm luôn. |
+| Hướng | Mức | Kết luận | 💡 Mách nhỏ |
+|---|---|---|---|
+| **S** Thực tế | Rõ | Bạn nghiêng hẳn về Thực tế ({n}/10), mắt thấy tai nghe mới tin. | Thấy tin hot là bạn hỏi "nguồn đâu?" đầu tiên. |
+| **S** Thực tế | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Thực tế nha, chân chạm đất mà đầu thỉnh thoảng vẫn bay. | Bạn đọc được cả chi tiết lẫn ý ngầm, combo này hiếm phết. |
+| **N** Trực giác | Rõ | Bạn nghiêng hẳn về Trực giác ({n}/10), nhìn đâu cũng thấy bức tranh lớn. | Não bạn lúc nào cũng mở sẵn 10 tab "lỡ như thì sao". |
+| **N** Trực giác | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Trực giác nha, mơ to nhưng vẫn check kỹ. | Bạn đọc được cả chi tiết lẫn ý ngầm, combo này hiếm phết. |
 
 ## Phần 3 — T · F (Cách bạn quyết định)
 
-| Hướng | Mức | Nội dung |
-|---|---|---|
-| **T** Lý trí | Rõ | Bạn nghiêng hẳn về Lý trí ({n}/10), não nhảy số nhanh hơn tim. Fun fact: lý trí không phải lạnh lùng đâu, bạn chỉ muốn mọi thứ hợp lý và công bằng. |
-| **T** Lý trí | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Lý trí nha. Phân tích kỹ mà vẫn để ý cảm xúc người khác, combo này làm leader là hợp lắm. |
-| **F** Cảm xúc | Rõ | Bạn nghiêng hẳn về Cảm xúc ({n}/10), quyết gì cũng nghĩ tới người trong cuộc trước. Fun fact: cảm xúc không phải mau nước mắt, mà là bạn sống theo giá trị mình tin. |
-| **F** Cảm xúc | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Cảm xúc nha. Nghe tim trước rồi để não duyệt lại, combo này làm leader là hợp lắm. |
+| Hướng | Mức | Kết luận | 💡 Mách nhỏ |
+|---|---|---|---|
+| **T** Lý trí | Rõ | Bạn nghiêng hẳn về Lý trí ({n}/10), não nhảy số nhanh hơn tim. | Lý trí không phải lạnh lùng đâu, bạn chỉ muốn mọi thứ hợp lý và công bằng. |
+| **T** Lý trí | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Lý trí nha, phân tích kỹ mà vẫn để ý cảm xúc người khác. | Cân được cả logic lẫn lòng người là skill làm leader xịn đó. |
+| **F** Cảm xúc | Rõ | Bạn nghiêng hẳn về Cảm xúc ({n}/10), quyết gì cũng nghĩ tới người trong cuộc trước. | Cảm xúc không phải mau nước mắt, mà là bạn sống theo giá trị mình tin. |
+| **F** Cảm xúc | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Cảm xúc nha, nghe tim trước rồi để não duyệt lại. | Cân được cả logic lẫn lòng người là skill làm leader xịn đó. |
 
 ## Phần 4 — J · P (Cách bạn sắp xếp)
 
-| Hướng | Mức | Nội dung |
-|---|---|---|
-| **J** Nguyên tắc | Rõ | Bạn nghiêng hẳn về Nguyên tắc ({n}/10), có plan rõ ràng mới thấy yên tâm. Fun fact: gạch xong một dòng to-do list là đủ làm bạn vui cả buổi. |
-| **J** Nguyên tắc | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Nguyên tắc nha. Thích có plan nhưng lệch plan cũng không sập, lúc nào cũng có sẵn plan B. |
-| **P** Linh hoạt | Rõ | Bạn nghiêng hẳn về Linh hoạt ({n}/10), nước đến chân mới nhảy mà nhảy vẫn đẹp. Fun fact: bạn thích để ngỏ lựa chọn, biết đâu lại có option xịn hơn. |
-| **P** Linh hoạt | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Linh hoạt nha. Ứng biến giỏi nhưng việc quan trọng vẫn lên lịch đàng hoàng, lúc nào cũng có sẵn plan B. |
+| Hướng | Mức | Kết luận | 💡 Mách nhỏ |
+|---|---|---|---|
+| **J** Nguyên tắc | Rõ | Bạn nghiêng hẳn về Nguyên tắc ({n}/10), có plan rõ ràng mới thấy yên tâm. | Gạch xong một dòng to-do list là đủ làm bạn vui cả buổi. |
+| **J** Nguyên tắc | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Nguyên tắc nha, thích có plan nhưng lệch plan cũng không sập. | Lúc nào cũng có sẵn plan B là kiểu sống an toàn nhất. |
+| **P** Linh hoạt | Rõ | Bạn nghiêng hẳn về Linh hoạt ({n}/10), nước đến chân mới nhảy mà nhảy vẫn đẹp. | Bạn thích để ngỏ lựa chọn, biết đâu lại có option xịn hơn. |
+| **P** Linh hoạt | Cân bằng | Bạn khá cân bằng, nhích nhẹ về Linh hoạt nha, ứng biến giỏi nhưng việc quan trọng vẫn lên lịch. | Lúc nào cũng có sẵn plan B là kiểu sống an toàn nhất. |
 
 Câu gợi mở sau phần 4 (`RESULT_HOOK`): Đủ 4 chữ rồi, linh vật của bạn đang chờ được đánh thức!
 

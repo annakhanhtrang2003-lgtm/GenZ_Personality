@@ -3,42 +3,96 @@
  * edit both together. `{n}` is the number of the part's 10 answers that
  * leaned toward the revealed letter (only used on a clear lean, n ≥ 7).
  *
- * Voice: Gen Z, two short sentences, no dashes between them (pinned by a
- * test). The "fun fact" restates the pole definitions in questions.json;
- * none of it is a statistic.
+ * Each entry is a one-sentence conclusion (`text`) plus a one-sentence tip
+ * the view shows under a "Mách nhỏ" label (`tip`). Voice: Gen Z, no dashes
+ * (both pinned by tests). Tips restate the pole definitions in
+ * questions.json; none of it is a statistic.
  */
-export const SUMMARY_COPY: Record<string, { clear: string; balanced: string }> = {
+export interface SummaryLine {
+  text: string;
+  tip: string;
+}
+
+export const SUMMARY_COPY: Record<string, { clear: SummaryLine; balanced: SummaryLine }> = {
   E: {
-    clear: "Bạn nghiêng hẳn về Hướng ngoại ({n}/10), đông người là pin full vạch. Fun fact: hội Hướng ngoại hay vừa nói vừa nghĩ, nói ra rồi mới biết mình nghĩ gì.",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Hướng ngoại nha. Quẩy được mà chill một mình cũng ok, kiểu này người ta gọi là ambivert đó.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Hướng ngoại ({n}/10), đông người là pin full vạch.",
+      tip: "Hội Hướng ngoại hay vừa nói vừa nghĩ, nói ra rồi mới biết mình nghĩ gì.",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Hướng ngoại nha, quẩy được mà chill một mình cũng ok.",
+      tip: "Kiểu tuỳ mood này có tên hẳn hoi đó: ambivert.",
+    },
   },
   I: {
-    clear: "Bạn nghiêng hẳn về Hướng nội ({n}/10), sạc pin bằng giờ me-time. Fun fact: hướng nội không phải là ngại người đâu, chỉ là bạn thích nghĩ kỹ rồi mới nói.",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Hướng nội nha. Đi tiệc vẫn vui nhưng về nhà nằm mới là chân ái, kiểu này người ta gọi là ambivert đó.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Hướng nội ({n}/10), sạc pin bằng giờ me-time.",
+      tip: "Hướng nội không phải là ngại người đâu, chỉ là bạn thích nghĩ kỹ rồi mới nói.",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Hướng nội nha, đi tiệc vẫn vui nhưng về nhà nằm mới là chân ái.",
+      tip: "Kiểu tuỳ mood này có tên hẳn hoi đó: ambivert.",
+    },
   },
   S: {
-    clear: "Bạn nghiêng hẳn về Thực tế ({n}/10), mắt thấy tai nghe mới tin. Fun fact: thấy tin hot là bạn hỏi \"nguồn đâu?\" đầu tiên.",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Thực tế nha. Chân chạm đất mà đầu thỉnh thoảng vẫn bay, đọc được cả chi tiết lẫn ý ngầm luôn.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Thực tế ({n}/10), mắt thấy tai nghe mới tin.",
+      tip: "Thấy tin hot là bạn hỏi \"nguồn đâu?\" đầu tiên.",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Thực tế nha, chân chạm đất mà đầu thỉnh thoảng vẫn bay.",
+      tip: "Bạn đọc được cả chi tiết lẫn ý ngầm, combo này hiếm phết.",
+    },
   },
   N: {
-    clear: "Bạn nghiêng hẳn về Trực giác ({n}/10), nhìn đâu cũng thấy bức tranh lớn. Fun fact: não bạn lúc nào cũng mở sẵn 10 tab \"lỡ như thì sao\".",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Trực giác nha. Mơ to nhưng vẫn check kỹ, đọc được cả chi tiết lẫn ý ngầm luôn.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Trực giác ({n}/10), nhìn đâu cũng thấy bức tranh lớn.",
+      tip: "Não bạn lúc nào cũng mở sẵn 10 tab \"lỡ như thì sao\".",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Trực giác nha, mơ to nhưng vẫn check kỹ.",
+      tip: "Bạn đọc được cả chi tiết lẫn ý ngầm, combo này hiếm phết.",
+    },
   },
   T: {
-    clear: "Bạn nghiêng hẳn về Lý trí ({n}/10), não nhảy số nhanh hơn tim. Fun fact: lý trí không phải lạnh lùng đâu, bạn chỉ muốn mọi thứ hợp lý và công bằng.",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Lý trí nha. Phân tích kỹ mà vẫn để ý cảm xúc người khác, combo này làm leader là hợp lắm.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Lý trí ({n}/10), não nhảy số nhanh hơn tim.",
+      tip: "Lý trí không phải lạnh lùng đâu, bạn chỉ muốn mọi thứ hợp lý và công bằng.",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Lý trí nha, phân tích kỹ mà vẫn để ý cảm xúc người khác.",
+      tip: "Cân được cả logic lẫn lòng người là skill làm leader xịn đó.",
+    },
   },
   F: {
-    clear: "Bạn nghiêng hẳn về Cảm xúc ({n}/10), quyết gì cũng nghĩ tới người trong cuộc trước. Fun fact: cảm xúc không phải mau nước mắt, mà là bạn sống theo giá trị mình tin.",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Cảm xúc nha. Nghe tim trước rồi để não duyệt lại, combo này làm leader là hợp lắm.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Cảm xúc ({n}/10), quyết gì cũng nghĩ tới người trong cuộc trước.",
+      tip: "Cảm xúc không phải mau nước mắt, mà là bạn sống theo giá trị mình tin.",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Cảm xúc nha, nghe tim trước rồi để não duyệt lại.",
+      tip: "Cân được cả logic lẫn lòng người là skill làm leader xịn đó.",
+    },
   },
   J: {
-    clear: "Bạn nghiêng hẳn về Nguyên tắc ({n}/10), có plan rõ ràng mới thấy yên tâm. Fun fact: gạch xong một dòng to-do list là đủ làm bạn vui cả buổi.",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Nguyên tắc nha. Thích có plan nhưng lệch plan cũng không sập, lúc nào cũng có sẵn plan B.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Nguyên tắc ({n}/10), có plan rõ ràng mới thấy yên tâm.",
+      tip: "Gạch xong một dòng to-do list là đủ làm bạn vui cả buổi.",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Nguyên tắc nha, thích có plan nhưng lệch plan cũng không sập.",
+      tip: "Lúc nào cũng có sẵn plan B là kiểu sống an toàn nhất.",
+    },
   },
   P: {
-    clear: "Bạn nghiêng hẳn về Linh hoạt ({n}/10), nước đến chân mới nhảy mà nhảy vẫn đẹp. Fun fact: bạn thích để ngỏ lựa chọn, biết đâu lại có option xịn hơn.",
-    balanced: "Bạn khá cân bằng, nhích nhẹ về Linh hoạt nha. Ứng biến giỏi nhưng việc quan trọng vẫn lên lịch đàng hoàng, lúc nào cũng có sẵn plan B.",
+    clear: {
+      text: "Bạn nghiêng hẳn về Linh hoạt ({n}/10), nước đến chân mới nhảy mà nhảy vẫn đẹp.",
+      tip: "Bạn thích để ngỏ lựa chọn, biết đâu lại có option xịn hơn.",
+    },
+    balanced: {
+      text: "Bạn khá cân bằng, nhích nhẹ về Linh hoạt nha, ứng biến giỏi nhưng việc quan trọng vẫn lên lịch.",
+      tip: "Lúc nào cũng có sẵn plan B là kiểu sống an toàn nhất.",
+    },
   },
 };
 

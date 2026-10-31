@@ -8,12 +8,13 @@ import { PART_THEMES } from "../_lib/partTheme";
 import type { NumerologyResult, ZodiacResult } from "../_lib/types";
 import { srcOf } from "../_lib/mascot";
 import styles from "./mascot.module.css";
+import party from "./celebrate.module.css";
 
 type Props = {
   /** 0-based index of the part just finished. */
   part: number;
-  /** The conclusion drawn from this part's 10 answers (see _lib/partSummary). */
-  summary: string;
+  /** The conclusion drawn from this part's 10 answers, plus its "Mách nhỏ" tip (see _lib/partSummary). */
+  summary: { text: string; tip: string };
   /** One slot per part: the letter once that part is done, otherwise null. */
   letters: (string | null)[];
   /**
@@ -42,12 +43,63 @@ function TeaserRow({ badge, label, value }: { badge: string; label: string; valu
   );
 }
 
+/**
+ * Confetti burst + bubbles, laid out deterministically (no Math.random, so
+ * every render and test sees the same party). Confetti fans out round the
+ * mascot in an even ring, slightly biased downward so it reads as falling.
+ */
+const CONFETTI_COUNT = 18;
+const BUBBLES = [
+  { left: "8%", size: 10, dur: 4.2, delay: 0, drift: 6 },
+  { left: "20%", size: 16, dur: 5.1, delay: 900, drift: -8 },
+  { left: "34%", size: 8, dur: 3.8, delay: 1800, drift: 4 },
+  { left: "62%", size: 18, dur: 5.6, delay: 400, drift: -6 },
+  { left: "74%", size: 11, dur: 4.4, delay: 1400, drift: 8 },
+  { left: "86%", size: 14, dur: 4.9, delay: 2200, drift: -4 },
+  { left: "94%", size: 9, dur: 3.6, delay: 700, drift: 5 },
+];
+
+function Celebration({ colors }: { colors: string[] }) {
+  return (
+    <div data-testid="celebration" aria-hidden="true" className={party.layer}>
+      {Array.from({ length: CONFETTI_COUNT }, (_, i) => {
+        const angle = (i / CONFETTI_COUNT) * Math.PI * 2;
+        const dist = 120 + (i % 3) * 28;
+        const vars = {
+          "--dx": `${Math.round(Math.cos(angle) * dist)}px`,
+          "--dy": `${Math.round(Math.sin(angle) * dist * 0.75 + 30)}px`,
+          "--rot": `${(i % 2 ? 1 : -1) * (200 + i * 23)}deg`,
+          "--delay": `${(i % 4) * 60}ms`,
+          backgroundColor: colors[i % colors.length],
+        } as React.CSSProperties;
+        return <span key={`c${i}`} data-confetti className={`${party.confetti} ${i % 3 === 0 ? party.dot : ""}`} style={vars} />;
+      })}
+      {BUBBLES.map((b, i) => (
+        <span
+          key={`b${i}`}
+          data-bubble
+          className={party.bubble}
+          style={{
+            left: b.left,
+            width: b.size,
+            height: b.size,
+            "--dur": `${b.dur}s`,
+            "--delay": `${b.delay}ms`,
+            "--drift": `${b.drift}px`,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
+
 /*
  * Each break screen wears the landing card of the part just finished —
  * same bg, ring, well gradient, badge and full-body mascot (PART_THEMES) —
  * so "the card you tapped" and "the part you finished" read as one thing.
- * Theme colours are runtime values, applied via inline style. Copy stays
- * neutral and bold; pink remains on the primary button and teaser badges.
+ * Two blocks: the mascot card (with the celebration over it) and, apart,
+ * the conclusion card (heading, bold conclusion, "Mách nhỏ" tip). Theme
+ * colours are runtime values, applied via inline style.
  */
 export function InterludeView({ part, summary, letters, preview, onContinue, onBack }: Props) {
   const t = PART_THEMES[part] ?? PART_THEMES[PART_THEMES.length - 1]!;
@@ -57,17 +109,18 @@ export function InterludeView({ part, summary, letters, preview, onContinue, onB
 
   return (
     <div className="flex flex-col items-center text-center gap-4 py-4">
+      {/* Block 1 — the part's card, smaller, with the party over it. */}
       <section
         data-testid="interlude-card"
-        className="w-full p-3 rounded-[28px]"
+        className="relative w-full max-w-[340px] p-2.5 rounded-[26px]"
         style={{ backgroundColor: t.bg, boxShadow: `0 0 0 1px ${t.ring}, 0 8px 20px rgba(148,163,184,.18)` }}
       >
         <div
-          className="relative aspect-[4/3] rounded-[22px] overflow-hidden flex items-end justify-center"
+          className="relative h-[190px] rounded-[20px] overflow-hidden flex items-end justify-center"
           style={{ background: t.well }}
         >
           <span
-            className="absolute left-3 top-3 px-3 py-1 rounded-full text-xs font-bold"
+            className="absolute left-2.5 top-2.5 z-10 px-3 py-1 rounded-full text-xs font-bold"
             style={{ backgroundColor: t.badge, color: t.badgeInk }}
           >
             Phần {part + 1}/{PART_COUNT} · {t.letters[0]} ↔ {t.letters[1]}
@@ -75,17 +128,36 @@ export function InterludeView({ part, summary, letters, preview, onContinue, onB
           <img
             src={srcOf(t.mascot)}
             alt=""
-            className={`h-[86%] w-auto object-contain drop-shadow-[0_12px_16px_rgba(15,23,42,.14)] ${styles.popIn}`}
+            className={`h-[88%] w-auto object-contain drop-shadow-[0_12px_16px_rgba(15,23,42,.14)] ${styles.popIn}`}
           />
         </div>
+        <Celebration colors={[t.badge, t.chip, "#facc15", "#38bdf8", "#f472b6", "#a78bfa"]} />
+      </section>
 
-        <div className={`px-2 pt-4 pb-2 ${styles.fadeUp}`}>
+      {/* Block 2 — the conclusion, on its own card. */}
+      <section
+        data-testid="interlude-conclusion"
+        className={`w-full rounded-[24px] bg-white px-5 pt-5 pb-4 ${styles.fadeUp}`}
+        style={{ boxShadow: `0 0 0 1px ${t.ring}, 0 6px 16px rgba(148,163,184,.14)` }}
+      >
+        <div className="flex items-center justify-center gap-2">
           <h2 className="text-[22px] font-extrabold text-worker-text-primary">
             Xong phần {part + 1}/{PART_COUNT} rồi!
           </h2>
-          <p data-testid="interlude-line" className="mt-2 text-[15px] leading-relaxed font-bold text-worker-text-primary">
-            {summary}
+          <span aria-hidden className={`text-[22px] ${party.cheer}`}>🎉</span>
+        </div>
+        <p data-testid="interlude-line" className="mt-2 text-[15px] leading-relaxed font-bold text-worker-text-primary">
+          {summary.text}
+        </p>
+        <div
+          data-testid="interlude-tip"
+          className="mt-3 rounded-2xl px-4 py-3 text-left"
+          style={{ backgroundColor: t.bg }}
+        >
+          <p className="text-xs font-extrabold uppercase tracking-wider" style={{ color: t.chip }}>
+            <span aria-hidden>💡 </span>Mách nhỏ
           </p>
+          <p className="mt-1 text-sm font-semibold leading-relaxed text-worker-text-primary">{summary.tip}</p>
         </div>
       </section>
 

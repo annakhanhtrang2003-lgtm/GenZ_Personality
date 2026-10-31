@@ -5,7 +5,10 @@ import { calculateZodiac } from "../../_lib/zodiac";
 import { calculateNumerology } from "../../_lib/numerology";
 import { PART_HOOKS, RESULT_HOOK } from "../../_lib/interludeCopy";
 
-const extra = { summary: "Bạn nghiêng về Hướng nội (7/10) — sạc pin bằng thời gian một mình.", letters: ["I", null, null, null] };
+const extra = {
+  summary: { text: "Bạn nghiêng hẳn về Hướng nội (7/10), sạc pin bằng giờ me-time.", tip: "Hướng nội không phải là ngại người đâu." },
+  letters: ["I", null, null, null],
+};
 
 describe("InterludeView", () => {
   it("says which part was finished", () => {
@@ -20,7 +23,31 @@ describe("InterludeView", () => {
 
   it("shows the conclusion drawn from the part just finished", () => {
     render(<InterludeView {...extra} part={0} onContinue={() => {}} onBack={() => {}} />);
-    expect(screen.getByTestId("interlude-line")).toHaveTextContent(extra.summary);
+    expect(screen.getByTestId("interlude-line")).toHaveTextContent(extra.summary.text);
+  });
+
+  it("adds a 'Mách nhỏ' tip under the conclusion", () => {
+    render(<InterludeView {...extra} part={0} onContinue={() => {}} onBack={() => {}} />);
+    const tip = screen.getByTestId("interlude-tip");
+    expect(tip).toHaveTextContent("Mách nhỏ");
+    expect(tip).toHaveTextContent(extra.summary.tip);
+  });
+
+  it("splits the mascot card and the conclusion into two separate blocks", () => {
+    render(<InterludeView {...extra} part={0} onContinue={() => {}} onBack={() => {}} />);
+    const card = screen.getByTestId("interlude-card");
+    const conclusion = screen.getByTestId("interlude-conclusion");
+    expect(card.contains(conclusion)).toBe(false);
+    expect(conclusion.contains(card)).toBe(false);
+    expect(conclusion).toContainElement(screen.getByTestId("interlude-line"));
+  });
+
+  it("throws a decorative party (confetti + bubbles) over the mascot card", () => {
+    render(<InterludeView {...extra} part={0} onContinue={() => {}} onBack={() => {}} />);
+    const party = screen.getByTestId("celebration");
+    expect(party).toHaveAttribute("aria-hidden", "true");
+    expect(party.querySelectorAll("[data-confetti]").length).toBeGreaterThanOrEqual(12);
+    expect(party.querySelectorAll("[data-bubble]").length).toBeGreaterThanOrEqual(5);
   });
 
   it("fills in the type one letter per part, blanks for the rest", () => {
