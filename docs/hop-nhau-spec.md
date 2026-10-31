@@ -1,6 +1,6 @@
 # "Hợp nhau": Spec + nội dung
 
-> Trạng thái: **SPEC, CHƯA CODE.** Viết 2026-10-31. Chờ Khanh quyết các câu hỏi ở §7 rồi mới lên plan task-by-task.
+> Trạng thái: **SPEC ĐÃ CHỐT, CHƯA CODE.** Viết và chốt ngày 2026-10-31 (quyết định ở §7). Plan task-by-task: `docs/superpowers/plans/2026-10-31-hop-nhau.md`.
 > Đọc kèm: `CLAUDE.md` (North Star, quy tắc riêng tư), `PROGRESS.md`.
 
 **Vì sao làm (theo Decision rule trong CLAUDE.md):** mỗi lần A chia sẻ đều có lý do để B bấm vào ("xem hai đứa hợp nhau tới đâu"). B làm xong lại có lý do chia sẻ tiếp (thẻ đôi, mời người khác). Vòng A → B → C làm tăng `share_rate`. Guardrail `completion_rate`: B chỉ phải làm đúng bài test hiện có, không thêm câu nào.
@@ -42,12 +42,12 @@ Khoảng thực tế: **30–100**. Có 13 giá trị: 30, 35, 45, 50, 55, 60, 6
 | Cùng cung | 92 |
 | Cùng nguyên tố | 88 |
 | Cặp bổ trợ: Lửa–Khí hoặc Đất–Nước | 80 |
-| Còn lại | 55 |
+| Còn lại | **65** (Q1: nâng từ 55) |
 
 **c) Số Chủ Đạo `L(a, b)`:**
 1. Rút gọn số master trước: 11 → 2, 22 → 4, 33 → 6.
 2. Chia nhóm: {1,5,7}, {2,4,8}, {3,6,9}.
-3. Cùng số (sau khi rút gọn) được 90, cùng nhóm 85, khác nhóm 60.
+3. Cùng số (sau khi rút gọn) được 90, cùng nhóm 85, khác nhóm **70** (Q1: nâng từ 60).
 
 ### 1.3 Điểm tổng
 
@@ -63,7 +63,7 @@ total = clamp( round( (4·P + 3·Z + 3·L) / 10 ), 45, 100 )
 
 Mình đã đếm hết **mọi cặp** (16×16 nhóm tính cách × 12×12 cung × 9×9 số sau khi rút gọn, coi như phân bố đều):
 
-1. **Sàn 45 không bao giờ chạm tới.** Điểm thấp nhất là 47 (0,4·30 + 0,3·55 + 0,3·60 = 46,5 → 47). Cao nhất là **95**, không bao giờ đạt 100. Vẫn giữ `clamp` cho an toàn.
+1. **Sàn 45 không bao giờ chạm tới.** Với công thức gốc, điểm thấp nhất là 47 (0,4·30 + 0,3·55 + 0,3·60 = 46,5 → 47). Với 65/70 đã chốt thì thấp nhất là 53 (12 + 19,5 + 21 = 52,5 → 53). Cao nhất là **95**, không bao giờ đạt 100. Vẫn giữ `clamp` cho an toàn.
 2. **Phân bố khá "khắt khe" với một sản phẩm cần được chia sẻ:**
 
    | Mức | Công thức hiện tại | Phương án nhẹ tay (Cung "còn lại" 65, Số "khác nhóm" 70) |
@@ -75,7 +75,7 @@ Mình đã đếm hết **mọi cặp** (16×16 nhóm tính cách × 12×12 cung
    | < 60 Oan gia ngõ hẹp | **20,5%** | **10,8%** |
    | Điểm thấp nhất | 47 | 53 |
 
-   Theo công thức hiện tại, cứ 5 cặp có 1 cặp nhận "Oan gia" và hơn nửa số cặp dưới 70. Người ta hay chia sẻ kết quả đẹp, nên đây là rủi ro cho `share_rate`. **Spec giữ đúng công thức của bạn**; phương án nhẹ tay chỉ là đề xuất (câu hỏi Q1).
+   Theo công thức hiện tại, cứ 5 cặp có 1 cặp nhận "Oan gia" và hơn nửa số cặp dưới 70. Người ta hay chia sẻ kết quả đẹp, nên đây là rủi ro cho `share_rate`. **Đã chốt (Q1): dùng phương án nhẹ tay 65/70.** Điểm thấp nhất thực tế là 53, cao nhất vẫn 95.
 3. **11/22/33 được coi là "cùng số" với 2/4/6.** Ví dụ một bạn số 22 với một bạn số 4 được 90 điểm, trong khi màn hình hiện "22" và "4". Câu chữ phải nói là **"cùng gốc số"** cho đúng (đã viết sẵn ở §2.4).
 4. **Điểm tạm (chỉ cung + số) có một khoảng trống 60–69.** Quy về thang 100 thì (Z + L)/2 chỉ ra các giá trị 57,5 và từ 70 trở lên: 33% cặp dưới 60, 0% trong khoảng 60–69. Nếu hiện một "điểm tổng tạm" rồi B làm xong bài, điểm có thể nhảy rất xa. Đề xuất ở §3 màn B2: **không hiện điểm tổng tạm**. Thay vào đó hiện 2 thanh (Cung, Số) và một **khoảng dự kiến** "Điểm tổng sẽ nằm trong khoảng X–Y", tính đúng bằng P = 30 và P = 100. Cách này trung thực mà vẫn gây tò mò (Q2).
 
@@ -99,7 +99,7 @@ Nếu một trong hai người không có `type` thì `compatResult` trả `pers
 
 ## 2. Nội dung
 
-Quy tắc chung: giọng Gen Z, vui, mỗi câu tối đa 2 dòng trên điện thoại (khoảng ≤ 90 ký tự). Không dùng gạch ngang nối câu (giống quy tắc copy màn nghỉ). Không phán xét tình cảm, không nhắc chia tay hay số phận. Không dùng chữ "MBTI", luôn gọi là "nhóm tính cách". Biến: `{X}` là tên người kia (khi người đó ẩn tên thì dùng "bạn ấy"), `{signA}`/`{signB}` là tên cung, `{el}` là nguyên tố (Lửa/Đất/Khí/Nước).
+Quy tắc chung: giọng Gen Z, vui, mỗi câu tối đa 2 dòng trên điện thoại (khoảng ≤ 90 ký tự). Không dùng gạch ngang nối câu (giống quy tắc copy màn nghỉ). Không phán xét tình cảm, không nhắc chia tay hay số phận. Không dùng chữ "MBTI", luôn gọi là "nhóm tính cách". Nội dung **không** chứa tên người (để dùng được cho cả link cặp, nơi không ai là "bạn"); tên chỉ xuất hiện trong tiêu đề màn hình. Biến: `{signA}`/`{signB}` là tên cung, xếp theo thứ tự cung trong năm để câu giống hệt nhau với cả hai người, `{el}` là nguyên tố (Lửa/Đất/Khí/Nước).
 
 ### 2.1 Năm mức nhãn (mỗi mức 2 biến thể)
 
@@ -107,7 +107,7 @@ Quy tắc chung: giọng Gen Z, vui, mỗi câu tối đa 2 dòng trên điện 
 |---|---|---|---|
 | 90+ | **Cặp bài trùng** | Hai đứa như được đặt hàng theo cặp, đi đâu cũng thấy "ủa sao giống vậy". | Hiểu ý tới mức chưa nói hết câu đã gật đầu, combo này hiếm lắm á. |
 | 80–89 | **Hợp cạ** | Nói chuyện là cuốn, làm gì chung cũng thấy nhẹ nhàng và vui. | Vibe khớp nhau ghê, kiểu bạn đồng hành mà ai cũng muốn có. |
-| 70–79 | **Bổ sung cho nhau** | Mỗi đứa giỏi một kiểu, ghép lại thành một team đủ đồ chơi. | Chỗ này bạn mạnh, chỗ kia {X} mạnh, đi chung là có người đỡ. |
+| 70–79 | **Bổ sung cho nhau** | Mỗi đứa giỏi một kiểu, ghép lại thành một team đủ đồ chơi. | Chỗ này đứa này mạnh, chỗ kia đứa kia mạnh, đi chung là có người đỡ. |
 | 60–69 | **Cần thêm thời gian** | Mới đầu có thể hơi lệch sóng, càng chơi lâu càng thấy thú vị. | Hai đứa khác nhịp một chút, nhưng chính cái khác đó làm câu chuyện không bao giờ nhạt. |
 | < 60 | **Oan gia ngõ hẹp** | Hay cãi nhau chí choé nhưng thiếu nhau là thấy trống trải liền. | Kiểu bạn bè cà khịa nhau mỗi ngày mà vẫn là người đầu tiên nhắn hỏi thăm. |
 
@@ -135,7 +135,7 @@ Mỗi chiều được coi là **"tốt"** khi: S/N giống, J/P giống, T/F gi
 | Cùng cung (92) | Cùng là {signA}, hai đứa như nhìn vào gương, hiểu nhau khỏi giải thích. | Giống nhau quá nên lỡ cùng lúc bướng thì không ai chịu nhường ai. |
 | Cùng nguyên tố (88) | {signA} và {signB} cùng hệ {el}, năng lượng chung một tần số. | Cùng hệ nên dễ cùng lúc "lên" hoặc cùng lúc "xuống", nhớ kéo nhau dậy. |
 | Bổ trợ Lửa–Khí / Đất–Nước (80) | {signA} và {signB} là cặp bổ trợ, đứa này tiếp năng lượng cho đứa kia. | Một đứa đi nhanh, một đứa đi chắc, thống nhất tốc độ trước khi chạy nha. |
-| Còn lại (55) | {signA} và {signB} khác hệ hoàn toàn, nên mở cho nhau đủ thứ góc nhìn mới. | Khác hệ nên đôi khi lệch sóng, nói rõ mình cần gì là ổn liền. |
+| Còn lại (65) | {signA} và {signB} khác hệ hoàn toàn, nên mở cho nhau đủ thứ góc nhìn mới. | Khác hệ nên đôi khi lệch sóng, nói rõ mình cần gì là ổn liền. |
 
 ### 2.4 Số Chủ Đạo
 
@@ -143,7 +143,7 @@ Mỗi chiều được coi là **"tốt"** khi: S/N giống, J/P giống, T/F gi
 |---|---|---|
 | Cùng gốc số (90) | Hai đứa cùng gốc số, chung kiểu động lực sống nên dễ đồng lòng. | Cùng gốc số nên cùng điểm yếu, nhắc nhau đừng cùng lúc ôm quá nhiều việc. |
 | Cùng nhóm (85) | Hai con số cùng nhóm, mục tiêu khác nhau mà cách đi lại giống nhau. | Cùng nhóm nên hay so kè ngầm, biến nó thành động lực là đẹp. |
-| Khác nhóm (60) | Hai con số khác nhóm, mỗi đứa mang tới một kiểu sức mạnh riêng. | Ưu tiên trong đời hơi khác nhau, hiểu "vì sao" của nhau là hết va. |
+| Khác nhóm (70) | Hai con số khác nhóm, mỗi đứa mang tới một kiểu sức mạnh riêng. | Ưu tiên trong đời hơi khác nhau, hiểu "vì sao" của nhau là hết va. |
 
 Ghi chú hiển thị: khi một người là số master mà gốc trùng với số của người kia (ví dụ 22 và 4), hiện thêm dòng nhỏ: "22 rút gọn về 4 nên hai đứa cùng gốc số".
 
@@ -175,7 +175,7 @@ Nhóm = Tư Duy (NT), Lý Tưởng (NF), Vững Chãi (SJ), Trải Nghiệm (SP)
 
 ## 3. Luồng người dùng
 
-Ký hiệu: **A** là người mời, **B** là người được mời. Tất cả nằm trong route của subpage (xem Q3).
+Ký hiệu: **A** là người mời, **B** là người được mời. Route: **`/personal-definition/hop-nhau`** (Q3). Link mời: `…/personal-definition/hop-nhau?i=<mã>#n=<tên>` (Q6: tên sau `#`; ẩn tên thì không có `#n`). Link cặp: `…?i=<mã A>&j=<mã B>#n=<tên A>&m=<tên B>` (Q5).
 
 ### A1. Trang kết quả của A, thêm khối "Hợp nhau"
 
@@ -186,7 +186,7 @@ Ký hiệu: **A** là người mời, **B** là người được mời. Tất c
 - Bấm nút:
   - **Điện thoại có Web Share:** mở share sheet. Text: "Mình là {nhóm tính cách} nè, vô xem hai đứa hợp nhau tới đâu 💞", kèm link mời. Bắn event `compat_invite_create`.
   - **Không có Web Share:** copy link vào clipboard. Dòng trạng thái: "Đã copy link, dán cho bạn bè nha!". Clipboard bị chặn thì hiện link trong ô có thể chọn để copy tay.
-- Link dạng `…/hop-nhau?i=<mã>` (§4).
+- Link dạng `…/personal-definition/hop-nhau?i=<mã>#n=<tên>` (§4).
 - Link nhỏ ngay dưới nút: **"Hoặc thử nhanh với ngày sinh của bạn bè"**, mở chế độ nhanh (A4).
 
 ### B1. Landing khi mở link mời
@@ -242,7 +242,7 @@ Sau màn nghỉ phần 4, khi đang có lời mời, nút "Xem kết quả" mở
 
 ### 4.1 Mã mời
 
-- **Định dạng:** `base64url(JSON.stringify({ v: 1, name?, type, sign, lifePath }))`, dùng mã hoá UTF-8 (tên có dấu, tên cung tiếng Việt). Cung lưu bằng **chỉ số 0–11** thay cho chuỗi để link ngắn hơn; khi giải thì tra lại tên cung và nguyên tố từ `zodiac-signs.json`. Đây là đề xuất, không đổi ý nghĩa.
+- **Định dạng (đã chốt Q6):** `?i=` = `base64url(JSON.stringify({ v: 1, type, sign, lifePath }))`; **tên không nằm trong mã** mà ở `#n=` (encodeURIComponent). Cung lưu bằng **chỉ số 0–11** thay cho chuỗi để link ngắn hơn; khi giải thì tra lại tên cung và nguyên tố từ `zodiac-signs.json`. Đây là đề xuất, không đổi ý nghĩa.
 - **`encodeInvite(p: InvitePayload): string`** và **`decodeInvite(code: string): InvitePayload | null`**, trong `_lib/inviteCode.ts`.
 - **`decodeInvite` trả `null` (không bao giờ throw) khi:**
   - base64 hỏng, JSON hỏng, hoặc không phải object
@@ -270,7 +270,8 @@ Phần `?i=` **được gửi lên server**: Vercel ghi lại URL trong request 
 
 ### 4.4 Ảnh xem trước (Open Graph) cho link mời
 
-- Dùng `opengraph-image.tsx` (`next/og` / `ImageResponse`) đặt trong route hop-nhau. Phải đọc `node_modules/next/dist/docs/` trước khi làm, vì AGENTS.md cảnh báo Next 16 có thay đổi phá vỡ tương thích.
+- **Đã chốt (Q7): bản đầu dùng MỘT ảnh tĩnh** `hop-nhau/opengraph-image.png` (1200×630) cho mọi link mời, app vẫn tĩnh hoàn toàn. Phần dưới đây là thiết kế cho ảnh động, để dành cho sau.
+- Ảnh động (để sau): dùng `opengraph-image.tsx` (`next/og` / `ImageResponse`) đặt trong route hop-nhau. Phải đọc `node_modules/next/dist/docs/` trước khi làm, vì AGENTS.md cảnh báo Next 16 có thay đổi phá vỡ tương thích.
 - Ảnh chỉ dùng dữ liệu đã giải từ `?i=`: mascot, nhóm, cung, số, và câu "Vô xem hai đứa hợp nhau tới đâu 💞". Mã không hợp lệ thì dùng ảnh mặc định.
 - Không `console.log`, không lưu, không gọi dịch vụ ngoài. Hiện app hoàn toàn tĩnh, nên đây là **route chạy trên server đầu tiên**. Phần này nằm ở phase 4, cần Khanh đồng ý (Q7).
 
@@ -279,7 +280,7 @@ Phần `?i=` **được gửi lên server**: Vercel ghi lại URL trong request 
 - **Event:** `compat_invite_create`, `compat_invite_open`, `compat_partial_view`, `compat_test_start`, `compat_full_view`, `compat_share_click`, `compat_share_success`.
 - **Chỉ được kèm:** `tier` (1 trong 5 mức), `format` (story/square), `hidden_name` (true/false). **Không bao giờ** kèm tên, ngày sinh, mã mời hay URL.
 - **Wrapper:** `track(event: CompatEvent, props?: …)` trong `_lib/analytics.ts`. Khi chưa có công cụ analytics thì hàm không làm gì (no-op).
-- **App chưa có công cụ analytics nào** (đã ghi ở North Star: share_rate chưa đo được). Phải chọn một công cụ thì event mới chạy thật (Q8).
+- **Đã chốt (Q8): chưa chọn công cụ.** `track()` là no-op có đủ 7 event, gắn sẵn ở đúng chỗ. Khi chọn công cụ thì chỉ sửa thân hàm `track()`.
 
 ---
 
@@ -302,9 +303,9 @@ Phần `?i=` **được gửi lên server**: Vercel ghi lại URL trong request 
   - `personalityScore("INFP","ENFP") = 100`
   - `personalityScore("ESTJ","INFP") = 35`
   - `personalityScore("ISTJ","INFP") = 30`
-  - Điểm cung: Bạch Dương × Bạch Dương = 92, Bạch Dương × Sư Tử = 88, Bạch Dương × Song Tử = 80, Bạch Dương × Kim Ngưu = 55
-  - Số chủ đạo: 22 × 4 = 90 ("cùng gốc"), 1 × 5 = 85, 1 × 2 = 60
-  - Điểm tổng: `compatTotal(30,55,60) = 47`, `compatTotal(100,92,90) = 95`
+  - Điểm cung: Bạch Dương × Bạch Dương = 92, Bạch Dương × Sư Tử = 88, Bạch Dương × Song Tử = 80, Bạch Dương × Kim Ngưu = 65
+  - Số chủ đạo: 22 × 4 = 90 ("cùng gốc"), 1 × 5 = 85, 1 × 2 = 70
+  - Điểm tổng: `compatTotal(30,65,70) = 53`, `compatTotal(100,92,90) = 95`
 - **Tổng luôn trong 45–100**, và **mỗi mức nhãn đều chạm tới được**.
 - **Mã mời:** encode rồi decode cho lại đúng dữ liệu. Mọi trường hợp lỗi ở §4.1 trả `null`. Mã không bao giờ chứa ngày sinh.
 - **Quét copy:** đúng quy tắc §2.6.
@@ -365,14 +366,14 @@ Phần `?i=` **được gửi lên server**: Vercel ghi lại URL trong request 
 
 ---
 
-## 7. Câu hỏi mở cần Khanh quyết
+## 7. Quyết định (Khanh chốt 2026-10-31)
 
-1. **Q1. Phân bố điểm:** giữ đúng công thức (20,5% cặp nhận "Oan gia", 56,8% dưới 70), hay dùng phương án nhẹ tay (Cung "còn lại" 55 → 65, Số "khác nhóm" 60 → 70, còn 10,8% "Oan gia", sàn thực tế 53)?
-2. **Q2. Màn kết quả tạm của B:** hiện 2 thanh cộng khoảng "{min}–{max}" như đề xuất, hay hiện một điểm tạm duy nhất (có khoảng trống 60–69 và có thể nhảy xa khi làm xong bài)?
-3. **Q3. Đường dẫn:** `/hop-nhau` như bạn viết, hay `/personal-definition/hop-nhau`? Theo CONTRIBUTING của team repo thì cụm này chỉ được sửa trong `app/personal-definition/`, nên mình đề xuất đường dẫn lồng.
-4. **Q4. Thứ tự màn khi B làm xong:** so sánh trước rồi tới kết quả riêng (đề xuất), hay ngược lại?
-5. **Q5. Link cặp `?i=&j=`:** có cho A xem đủ màn so sánh mà không phải làm lại bài không (đề xuất là có)?
-6. **Q6. Tên trong link:** để tên sau `#` cho khỏi nằm trong log server (đề xuất), hay để trong `?i=` như bạn viết (ảnh OG sẽ hiện được tên)?
-7. **Q7. Ảnh OG:** đồng ý thêm route chạy trên server đầu tiên (tốn function của Vercel), hay bỏ OG ở bản đầu và dùng ảnh tĩnh chung?
-8. **Q8. Công cụ analytics:** Vercel Web Analytics (custom event cần gói Pro), PostHog (gói miễn phí, dùng EU cloud), hay GA4? Chưa chọn thì `track()` không làm gì và event chưa đo được.
-9. **Q9. Quan hệ với Idol Match (Spec B cũ):** dùng chung công thức này để so với idol, hay giữ quyết định cũ là "không có điểm % bịa"? Nếu dùng chung thì phải cập nhật quyết định cũ.
+1. **Q1. Phân bố điểm:** dùng phương án nhẹ tay. Cung "còn lại" 65, Số "khác nhóm" 70. "Oan gia" còn 10,8%, sàn thực tế 53.
+2. **Q2. Màn tạm của B:** 2 thanh (Cung, Số), thanh tính cách khóa, cùng dòng "Điểm tổng sẽ nằm trong khoảng {min}–{max}". Không hiện điểm tổng tạm.
+3. **Q3. Đường dẫn:** `/personal-definition/hop-nhau`.
+4. **Q4. Thứ tự màn:** màn so sánh trước, kết quả riêng của B ngay bên dưới, trên cùng một trang.
+5. **Q5. Link cặp:** có. `?i=<A>&j=<B>` mở thẳng màn so sánh đầy đủ, ghi "{Tên A} × {Tên B}".
+6. **Q6. Tên:** đặt sau `#` (`#n=`, link cặp thêm `&m=`). Server và ảnh OG không bao giờ thấy tên.
+7. **Q7. Ảnh OG:** bản đầu dùng một ảnh tĩnh; ảnh động để sau.
+8. **Q8. Analytics:** `track()` là no-op, đủ 7 event, chưa gửi đi đâu. Chọn công cụ sau.
+9. **Q9. Idol Match:** giữ quyết định cũ, không có điểm %, chỉ so số chữ trùng N/4.
