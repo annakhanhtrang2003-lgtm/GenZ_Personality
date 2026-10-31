@@ -42,9 +42,15 @@ describe("shareModel", () => {
     expect(shareModel(profile, "personality-test-virid.vercel.app").footer).toContain("personality-test-virid.vercel.app");
   });
 
-  it("is a 4:5 portrait image named after the type", () => {
+  it("is a 4:5 portrait image", () => {
     expect(SHARE_WIDTH / SHARE_HEIGHT).toBeCloseTo(4 / 5);
-    expect(shareFileName(profile.mbti.type)).toBe(`ket-qua-${profile.mbti.type}.png`);
+  });
+
+  it("names the file name_mbti_number, accents and spaces made file-safe", () => {
+    expect(shareFileName("Khanh", "ENTJ", 4)).toBe("Khanh_ENTJ_4.png");
+    expect(shareFileName("Trần Khánh Đăng", "INFP", 11)).toBe("Tran-Khanh-Dang_INFP_11.png");
+    expect(shareFileName("  ✨ 88 / ok ", "ESTJ", 7)).toBe("88-ok_ESTJ_7.png");
+    expect(shareFileName("✨✨", "ESTJ", 7)).toBe("ban_ESTJ_7.png");
   });
 });
 

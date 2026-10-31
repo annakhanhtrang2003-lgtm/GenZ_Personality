@@ -68,8 +68,21 @@ export function shareModel(profile: PersonalProfile, host: string): ShareModel {
   };
 }
 
-export function shareFileName(type: string): string {
-  return `ket-qua-${type}.png`;
+/**
+ * `name_mbti_number.png`, e.g. "Khanh-Trang_ENTJ_4.png". The display name is
+ * made file-safe (accents and đ folded, anything but letters/digits becomes
+ * a hyphen); a name with nothing left falls back to "ban".
+ */
+export function shareFileName(name: string, type: string, lifePath: number): string {
+  const safe =
+    name
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
+      .replace(/[^A-Za-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "ban";
+  return `${safe}_${type}_${lifePath}.png`;
 }
 
 const FONT = '"MoMo Trust", "SF Pro Rounded", -apple-system, "Segoe UI", Roboto, sans-serif';

@@ -5,8 +5,6 @@ import type { PersonalProfile } from "../../_lib/types";
 import { renderShareImage, shareFileName } from "../../_lib/shareImage";
 import { CAREERPATH_URL, careerPathUrl } from "../../_lib/links";
 
-type Busy = "share" | "download" | null;
-
 function downloadBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -19,36 +17,24 @@ function downloadBlob(blob: Blob, filename: string) {
 }
 
 /**
- * The result screen's last block: share the result image (Web Share with a
- * file where the browser supports it, otherwise it downloads), download it,
- * and the way on to CareerPath. Plugs into SynthesisView's `actions` slot.
+ * The result screen's last block: one "Chia sẻ kết quả" button (Web Share
+ * with the image file where supported, otherwise the image downloads as
+ * name_mbti_number.png) and the way on to CareerPath. Plugs into
+ * SynthesisView's `actions` slot.
  */
 export function ResultActions({ profile, accent }: { profile: PersonalProfile; accent: string }) {
-  const [busy, setBusy] = useState<Busy>(null);
+  const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
   const type = profile.mbti.type;
-  const filename = shareFileName(type);
+  const filename = shareFileName(profile.user.name, type, profile.numerology.life_path);
 
-  const makeImage = async () => renderShareImage(profile);
-
-  const onDownload = async () => {
-    setBusy("download");
-    setStatus("");
-    try {
-      downloadBlob(await makeImage(), filename);
-      setStatus("Đã lưu ảnh, đăng story khoe liền nha!");
-    } catch {
-      setStatus("Chưa tạo được ảnh, bạn thử lại nhé.");
-    } finally {
-      setBusy(null);
-    }
-  };
-
+  // One button: the share sheet with the image where the browser can share
+  // files (phones), otherwise the image is downloaded (most desktops).
   const onShare = async () => {
-    setBusy("share");
+    setBusy(true);
     setStatus("");
     try {
-      const blob = await makeImage();
+      const blob = await renderShareImage(profile);
       const file = new File([blob], filename, { type: "image/png" });
       const data: ShareData = {
         files: [file],
@@ -58,42 +44,30 @@ export function ResultActions({ profile, accent }: { profile: PersonalProfile; a
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
         await navigator.share(data);
       } else {
-        // No file sharing here (most desktop browsers): save the image instead.
         downloadBlob(blob, filename);
-        setStatus("Máy bạn chưa hỗ trợ chia sẻ ảnh, mình đã tải ảnh về cho bạn.");
+        setStatus("Đã tải ảnh về máy, đăng story khoe liền nha!");
       }
     } catch (err) {
       // Closing the share sheet is not an error worth a message.
       if (!(err instanceof DOMException && err.name === "AbortError")) {
-        setStatus("Chưa chia sẻ được, bạn thử tải ảnh về nhé.");
+        setStatus("Chưa tạo được ảnh, bạn thử lại nhé.");
       }
     } finally {
-      setBusy(null);
+      setBusy(false);
     }
   };
 
   return (
     <section className="flex flex-col gap-3">
-      <div className="grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={onShare}
-          disabled={busy !== null}
-          className="rounded-full py-3.5 px-4 text-[15px] font-bold text-white disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2"
-          style={{ backgroundColor: accent, outlineColor: accent }}
-        >
-          {busy === "share" ? "Đang tạo ảnh…" : "Chia sẻ kết quả"}
-        </button>
-        <button
-          type="button"
-          onClick={onDownload}
-          disabled={busy !== null}
-          className="rounded-full py-3.5 px-4 text-[15px] font-bold bg-white disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2"
-          style={{ color: accent, boxShadow: `inset 0 0 0 2px ${accent}`, outlineColor: accent }}
-        >
-          {busy === "download" ? "Đang tạo ảnh…" : "Tải ảnh về"}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={onShare}
+        disabled={busy}
+        className="w-full rounded-full py-4 px-4 text-[16px] font-bold text-white disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2"
+        style={{ backgroundColor: accent, outlineColor: accent }}
+      >
+        {busy ? "Đang tạo ảnh…" : "Chia sẻ kết quả"}
+      </button>
 
       <p role="status" aria-live="polite" className="min-h-5 text-center text-sm text-[#475569]">
         {status}
