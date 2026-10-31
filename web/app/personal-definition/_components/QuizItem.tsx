@@ -33,7 +33,7 @@ export function QuizItem({ index, text, value, isOpen, onToggle, onAnswer }: Pro
         <span className="w-5 shrink-0 text-sm text-worker-text-secondary">{ordinal}.</span>
         <span
           className={`flex-1 text-sm ${
-            answered && !isOpen ? "text-worker-text-secondary" : "text-worker-primary"
+            answered && !isOpen ? "text-worker-text-secondary" : "text-worker-text-primary font-semibold"
           }`}
         >
           {text}

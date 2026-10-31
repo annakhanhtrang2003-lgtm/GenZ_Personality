@@ -77,3 +77,23 @@ describe("QuizItem", () => {
     expect(screen.getByRole("button")).toHaveAttribute("id", `quiz-row-toggle-${base.index}`);
   });
 });
+
+describe("QuizItem question text colour", () => {
+  it("sets open and unanswered questions in bold black, not pink", () => {
+    const { rerender } = render(
+      <QuizItem index={0} text="Câu mẫu" value={null} isOpen={true} onToggle={() => {}} onAnswer={() => {}} />,
+    );
+    let q = screen.getByText("Câu mẫu");
+    expect(q.className).toContain("text-worker-text-primary");
+    expect(q.className).toContain("font-semibold");
+    expect(q.className).not.toContain("text-worker-primary");
+    rerender(<QuizItem index={0} text="Câu mẫu" value={null} isOpen={false} onToggle={() => {}} onAnswer={() => {}} />);
+    q = screen.getByText("Câu mẫu");
+    expect(q.className).toContain("text-worker-text-primary");
+  });
+
+  it("fades an answered, collapsed question to grey so progress stays visible", () => {
+    render(<QuizItem index={0} text="Câu mẫu" value={1} isOpen={false} onToggle={() => {}} onAnswer={() => {}} />);
+    expect(screen.getByText("Câu mẫu").className).toContain("text-worker-text-secondary");
+  });
+});

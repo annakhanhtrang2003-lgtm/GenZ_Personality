@@ -27,7 +27,7 @@ Kiểm tra trong trình duyệt (Playwright, bản build production): đo đư�
 - `merchant_job_board` (team repo) **chưa** nhận các thay đổi này.
 
 ### Chữ hồng ở các màn khác (đã liệt kê, CHƯA sửa)
-1. `QuizItem.tsx:36`: toàn bộ câu hỏi chưa trả lời + câu đang mở dùng `text-worker-primary`. Cả danh sách 10 câu đều hồng.
+1. ~~`QuizItem.tsx:36`: câu hỏi màu hồng~~ → **đã sửa**: câu đang mở / chưa trả lời giờ là chữ đen đậm (`text-worker-text-primary font-semibold`), câu đã trả lời vẫn xám.
 2. `LikertScale.tsx:72`: nhãn đáp án đã chọn ("Hơi giống mình"…) màu hồng.
 3. `QuizPart.tsx:75`: tiêu đề phần ("Bạn giữa mọi người") theo màu phần, phần 1 là hồng `#db2777`.
 4. `Hero.tsx:50`: nửa sau tiêu đề "Bạn có đang lạc lối?" gradient hồng→tím.
