@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { OnboardingForm } from "../OnboardingForm";
 import type { Input } from "../../_lib/state";
 
-const emptyInput: Input = { name: "", full_name: "", university: "", birth_date: "" };
+const emptyInput: Input = { name: "", university: "", birth_date: "" };
 
 describe("OnboardingForm", () => {
   it("renders a university option sourced from the data file", () => {
@@ -22,6 +22,12 @@ describe("OnboardingForm", () => {
       />,
     );
     expect(screen.getByText("Cho mình biết tên bạn nhé.")).toBeInTheDocument();
+  });
+
+  it("asks for a display name only, not a full legal name", () => {
+    render(<OnboardingForm onBack={() => {}} input={emptyInput} errors={{}} onChange={() => {}} onSubmit={() => {}} />);
+    expect(screen.getByPlaceholderText(/tên bạn muốn hiển thị/i)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText(/họ tên/i)).not.toBeInTheDocument();
   });
 
   it("calls onChange when the display name is typed", () => {
@@ -43,7 +49,7 @@ describe("OnboardingForm", () => {
 
 describe("OnboardingForm birth date", () => {
   const withDate = (birth_date: string): Input => ({
-    name: "", full_name: "", university: "", birth_date,
+    name: "", university: "", birth_date,
   });
 
   it("offers day, month and year selects instead of a calendar popover", () => {

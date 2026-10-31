@@ -89,15 +89,6 @@ export function OnboardingForm({ input, errors, onChange, onSubmit, onBack }: Pr
               {errors.name && <p className="text-xs text-worker-danger mt-1">{errors.name}</p>}
             </div>
 
-            <div>
-              <TextInput
-                value={input.full_name}
-                onChange={(v) => onChange("full_name", v)}
-                placeholder="Họ tên đầy đủ như trên giấy khai sinh"
-              />
-              {errors.full_name && <p className="text-xs text-worker-danger mt-1">{errors.full_name}</p>}
-            </div>
-
             <Select
               label="Trường của bạn"
               value={input.university}

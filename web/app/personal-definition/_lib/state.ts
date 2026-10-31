@@ -7,8 +7,12 @@ import { PART_COUNT, indicesOfPart, firstIndexOfPart } from "./parts";
 export type Phase = "intro" | "onboarding" | "quiz" | "interlude" | "synthesis";
 
 export interface Input {
+  /**
+   * Display name. It is also the name numerology runs on: the form no
+   * longer asks for a legal full name (privacy + one less field), and the
+   * only number shown anywhere — Số Chủ Đạo — comes from birth_date alone.
+   */
   name: string;
-  full_name: string;
   university: string;
   birth_date: string; // YYYY-MM-DD
 }
@@ -39,7 +43,7 @@ export type Action =
 
 export const initialState: State = {
   phase: "intro",
-  input: { name: "", full_name: "", university: "", birth_date: "" },
+  input: { name: "", university: "", birth_date: "" },
   responses: Array.from({ length: QUESTION_COUNT }, () => null),
   part: 0,
   open: null,
@@ -74,11 +78,10 @@ function nextOpen(
 /** Pure validation shared by the form (for messages) and the START_QUIZ guard. */
 export function validateInput(input: Input): InputErrors {
   const errors: InputErrors = {};
-  if (!input.name.trim()) errors.name = "Cho mình biết tên bạn nhé.";
-  if (!input.full_name.trim()) {
-    errors.full_name = "Điền họ tên đầy đủ giúp mình.";
-  } else if (normalizeVietnamese(input.full_name).length === 0) {
-    errors.full_name = "Tên cần có chữ cái để tính được con số của bạn.";
+  if (!input.name.trim()) {
+    errors.name = "Cho mình biết tên bạn nhé.";
+  } else if (normalizeVietnamese(input.name).length === 0) {
+    errors.name = "Tên cần có ít nhất một chữ cái nhé.";
   }
   if (!input.university) errors.university = "Chọn trường của bạn.";
   if (!input.birth_date) {
@@ -156,7 +159,7 @@ export function reducer(state: State, action: Action): State {
         name: state.input.name,
         university: state.input.university,
         birth_date: state.input.birth_date,
-        full_name: state.input.full_name,
+        full_name: state.input.name,
         responses: state.responses as Response[],
       });
       return { ...state, phase: "synthesis", profile };

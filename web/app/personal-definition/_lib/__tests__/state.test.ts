@@ -7,7 +7,6 @@ import { firstIndexOfPart, PART_COUNT } from "../parts";
 
 const validInput = {
   name: "Khánh",
-  full_name: "Nguyễn Thị Khánh Trang",
   university: "ueh",
   birth_date: "2003-06-15",
 };
@@ -20,10 +19,12 @@ describe("validateInput", () => {
     expect(validateInput(validInput)).toEqual({});
   });
 
-  it("flags empty name and full name", () => {
-    const e = validateInput({ ...validInput, name: "  ", full_name: "" });
-    expect(e.name).toBeTruthy();
-    expect(e.full_name).toBeTruthy();
+  it("flags an empty display name", () => {
+    expect(validateInput({ ...validInput, name: "  " }).name).toBe("Cho mình biết tên bạn nhé.");
+  });
+
+  it("asks only for a display name — there is no full-name field any more", () => {
+    expect(Object.keys(initialState.input).sort()).toEqual(["birth_date", "name", "university"]);
   });
 
   it("flags an unselected university", () => {
@@ -38,7 +39,7 @@ describe("validateInput", () => {
   });
 
   it("flags a name with no mappable letters", () => {
-    expect(validateInput({ ...validInput, full_name: "123 !!!" }).full_name).toBeTruthy();
+    expect(validateInput({ ...validInput, name: "123 !!!" }).name).toBeTruthy();
   });
 });
 

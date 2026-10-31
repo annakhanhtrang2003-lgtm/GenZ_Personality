@@ -18,7 +18,7 @@ export default function PersonalDefinitionPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [showErrors, setShowErrors] = useState(false);
 
-  const { birth_date, full_name } = state.input;
+  const { birth_date, name } = state.input;
   const inputErrors = validateInput(state.input);
   const errors = showErrors ? inputErrors : {};
 
@@ -26,7 +26,7 @@ export default function PersonalDefinitionPage() {
    * Zodiac and numerology depend only on onboarding input, so they are
    * available long before the quiz ends — that is what lets the halfway
    * teaser show real values with no partial MBTI scoring. The memo is
-   * gated on `validateInput` reporting no `full_name`/`birth_date` error —
+   * gated on `validateInput` reporting no `name`/`birth_date` error —
    * the same check START_QUIZ uses — rather than the looser
    * "both fields non-empty" check this used to run on every keystroke.
    * That looser check let a name with no mappable letters (e.g. "88")
@@ -36,12 +36,12 @@ export default function PersonalDefinitionPage() {
    * on instead of duplicating its rules.
    */
   const preview = useMemo(() => {
-    if (inputErrors.full_name || inputErrors.birth_date) return undefined;
+    if (inputErrors.name || inputErrors.birth_date) return undefined;
     return {
       zodiac: calculateZodiac(birth_date),
-      numerology: calculateNumerology(birth_date, full_name),
+      numerology: calculateNumerology(birth_date, name),
     };
-  }, [birth_date, full_name, inputErrors.full_name, inputErrors.birth_date]);
+  }, [birth_date, name, inputErrors.name, inputErrors.birth_date]);
 
   // Each screen (intro, onboarding, a quiz part, an interlude, synthesis) is a full
   // page's worth of content; without this, finishing a part while scrolled

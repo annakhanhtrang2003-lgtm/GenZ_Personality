@@ -19,9 +19,6 @@ function fillOnboarding() {
   fireEvent.change(screen.getByPlaceholderText(/tên bạn muốn hiển thị/i), {
     target: { value: "Khánh" },
   });
-  fireEvent.change(screen.getByPlaceholderText(/họ tên đầy đủ/i), {
-    target: { value: "Nguyễn Thị Khánh Trang" },
-  });
   fireEvent.change(screen.getByLabelText("Trường của bạn"), { target: { value: "ueh" } });
   fireEvent.change(screen.getByLabelText("Ngày"), { target: { value: "15" } });
   fireEvent.change(screen.getByLabelText("Tháng"), { target: { value: "6" } });
@@ -68,16 +65,16 @@ describe("page wiring", () => {
   // birth date is three plain <select> elements, which fireEvent.change
   // drives fine under jsdom — so this can exercise the real crash. A name
   // with no mappable letters (e.g. all digits) makes
-  // normalizeVietnamese(full_name) === "", which calculateNumerology treats
+  // normalizeVietnamese(name) === "", which calculateNumerology treats
   // as a thrown error. The preview memo used to run on every keystroke off
-  // of only `birth_date`/`full_name` being non-empty, well before onboarding
+  // of only `birth_date`/name being non-empty, well before onboarding
   // validation had a chance to reject the name, so setting both fields
   // crashed the page with no error boundary in the route.
-  it("does not crash when the full name has no mappable letters", () => {
+  it("does not crash when the name has no mappable letters", () => {
     render(<PersonalDefinitionPage />);
     openForm();
 
-    fireEvent.change(screen.getByPlaceholderText(/họ tên đầy đủ/i), {
+    fireEvent.change(screen.getByPlaceholderText(/tên bạn muốn hiển thị/i), {
       target: { value: "88" },
     });
     fireEvent.change(screen.getByLabelText("Ngày"), { target: { value: "1" } });
@@ -155,7 +152,6 @@ describe("intro flow", () => {
 
     openForm();
     expect(screen.getByPlaceholderText(/tên bạn muốn hiển thị/i)).toHaveValue("Khánh");
-    expect(screen.getByPlaceholderText(/họ tên đầy đủ/i)).toHaveValue("Nguyễn Thị Khánh Trang");
     expect(screen.getByLabelText("Ngày")).toHaveValue("15");
     expect(screen.getByLabelText("Tháng")).toHaveValue("6");
     expect(screen.getByLabelText("Năm")).toHaveValue("2003");
