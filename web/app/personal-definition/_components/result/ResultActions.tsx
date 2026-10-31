@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { PersonalProfile } from "../../_lib/types";
 import { renderShareImage, shareFileName } from "../../_lib/shareImage";
-import { CAREERPATH_URL, careerPathUrl } from "../../_lib/links";
 
 function downloadBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
@@ -19,8 +18,7 @@ function downloadBlob(blob: Blob, filename: string) {
 /**
  * The result screen's last block: one "Chia sẻ kết quả" button (Web Share
  * with the image file where supported, otherwise the image downloads as
- * name_mbti_number.png) and the way on to CareerPath. Plugs into
- * SynthesisView's `actions` slot.
+ * name_mbti_number.png). Plugs into SynthesisView's `actions` slot.
  */
 export function ResultActions({ profile, accent }: { profile: PersonalProfile; accent: string }) {
   const [busy, setBusy] = useState(false);
@@ -72,16 +70,6 @@ export function ResultActions({ profile, accent }: { profile: PersonalProfile; a
       <p role="status" aria-live="polite" className="min-h-5 text-center text-sm text-[#475569]">
         {status}
       </p>
-
-      <a
-        href={careerPathUrl(CAREERPATH_URL, profile)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center gap-1.5 rounded-[20px] bg-[#0f172a] px-4 py-4 text-[15px] font-bold whitespace-nowrap text-white shadow-[0_10px_22px_-8px_rgba(15,23,42,.45)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f172a]"
-      >
-        Khám phá lộ trình nghề nghiệp phù hợp
-        <span aria-hidden>→</span>
-      </a>
     </section>
   );
 }

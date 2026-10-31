@@ -73,13 +73,8 @@ describe("ResultActions", () => {
     expect(screen.getByRole("status")).toHaveTextContent("");
   });
 
-  it("links to CareerPath in a new tab with the top career and type only", () => {
+  it("no longer links to CareerPath", () => {
     render(<ResultActions profile={profile} accent="#6d28d9" />);
-    const link = screen.getByRole("link", { name: /Khám phá lộ trình nghề nghiệp phù hợp/ });
-    expect(link).toHaveAttribute("target", "_blank");
-    expect(link.getAttribute("rel")).toContain("noopener");
-    const href = link.getAttribute("href")!;
-    expect(href).toContain(`mbti=${profile.mbti.type}`);
-    expect(href).not.toContain("Khanh");
+    expect(screen.queryByRole("link", { name: /Khám phá lộ trình nghề nghiệp/ })).not.toBeInTheDocument();
   });
 });

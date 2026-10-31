@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { shareModel, shareFileName, SHARE_WIDTH, SHARE_HEIGHT } from "../shareImage";
-import { careerPathUrl } from "../links";
 import { buildProfile } from "../profile";
 import { QUESTION_COUNT } from "../likert";
 import type { Response } from "../types";
@@ -51,21 +50,5 @@ describe("shareModel", () => {
     expect(shareFileName("Trần Khánh Đăng", "INFP", 11)).toBe("Tran-Khanh-Dang_INFP_11.png");
     expect(shareFileName("  ✨ 88 / ok ", "ESTJ", 7)).toBe("88-ok_ESTJ_7.png");
     expect(shareFileName("✨✨", "ESTJ", 7)).toBe("ban_ESTJ_7.png");
-  });
-});
-
-describe("careerPathUrl", () => {
-  it("opens CareerPath with the top career as the title and the type, nothing personal", () => {
-    const url = careerPathUrl("https://jobs.example.com/careerpath", profile);
-    const u = new URL(url);
-    expect(u.searchParams.get("title")).toBe(profile.synthesis.career_hints[0]);
-    expect(u.searchParams.get("mbti")).toBe(profile.mbti.type);
-    expect(url).not.toContain("Khanh");
-    expect(url).not.toContain("2003");
-  });
-
-  it("works with a relative base (inside the team app)", () => {
-    const url = careerPathUrl("/careerpath", profile);
-    expect(url.startsWith("/careerpath?")).toBe(true);
   });
 });

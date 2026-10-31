@@ -37,7 +37,7 @@ describe("SynthesisView", () => {
   it("renders the four sections in order", () => {
     render(<SynthesisView profile={profile} />);
     const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Bốn chiều của bạn", "Số chủ đạo của bạn", "Cung hoàng đạo của bạn", "Điểm mạnh", "Điểm cần cải thiện", "Nghề nghiệp phù hợp"]);
+    expect(headings).toEqual(["Bốn chiều của bạn", "Số chủ đạo của bạn", "Cung hoàng đạo của bạn", "Nghề nghiệp phù hợp"]);
   });
 
   it("puts the mascot card on the left and life path + zodiac on the right, above the details", () => {
@@ -88,5 +88,13 @@ describe("SynthesisView", () => {
   it("renders whatever actions it is given", () => {
     render(<SynthesisView profile={profile} actions={<button>Lưu ảnh</button>} />);
     expect(screen.getByRole("button", { name: "Lưu ảnh" })).toBeInTheDocument();
+  });
+});
+
+describe("SynthesisView removed sections", () => {
+  it("has no strengths / growth-areas cards", () => {
+    render(<SynthesisView profile={profile} />);
+    expect(screen.queryByRole("heading", { name: "Điểm mạnh" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Điểm cần cải thiện" })).not.toBeInTheDocument();
   });
 });
