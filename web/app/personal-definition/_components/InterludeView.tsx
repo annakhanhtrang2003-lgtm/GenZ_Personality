@@ -30,11 +30,17 @@ function TeaserRow({ badge, label, value }: { badge: string; label: string; valu
       <span className="text-lg text-worker-primary shrink-0" aria-hidden>{badge}</span>
       <div className="flex flex-col text-left">
         <span className="text-xs text-worker-text-secondary">{label}</span>
-        <span className="text-sm text-worker-primary">{value}</span>
+        <span className="text-sm text-worker-text-primary">{value}</span>
       </div>
     </div>
   );
 }
+
+/*
+ * Colour rule: copy is neutral (text-primary / text-secondary). Pink is kept
+ * for the primary button, the progress dots and one small accent — the
+ * teaser badges (★, life-path number).
+ */
 
 /** One per boundary — three boundaries for four parts. */
 const LINES: { face: FaceName; line: string }[] = [
@@ -55,7 +61,7 @@ export function InterludeView({ part, preview, onContinue, onBack }: Props) {
         className={`w-28 h-28 object-contain ${styles.bounceIn}`}
       />
 
-      <h2 className="text-[22px] font-medium text-worker-primary">
+      <h2 className="text-[22px] font-semibold text-worker-text-primary">
         Xong phần {part + 1}/{PART_COUNT} rồi!
       </h2>
 
@@ -64,8 +70,8 @@ export function InterludeView({ part, preview, onContinue, onBack }: Props) {
       </p>
 
       {nextTitle && (
-        <p className="text-sm text-worker-primary">
-          Tiếp theo: <span className="font-medium">{nextTitle}</span>
+        <p className="text-sm text-worker-text-secondary">
+          Tiếp theo: <span className="font-semibold text-worker-text-primary">{nextTitle}</span>
         </p>
       )}
 
@@ -88,7 +94,7 @@ export function InterludeView({ part, preview, onContinue, onBack }: Props) {
             <span className="text-lg shrink-0" aria-hidden>🔒</span>
             <div className="flex flex-col text-left">
               <span className="text-xs text-worker-text-secondary">Nhóm tính cách MBTI</span>
-              <span className="text-sm text-worker-primary">
+              <span className="text-sm text-worker-text-primary">
                 Còn {QUESTION_COUNT - (part + 1) * PART_SIZE} câu nữa
               </span>
             </div>

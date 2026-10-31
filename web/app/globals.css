@@ -12,6 +12,9 @@
   --color-worker-primary-light: #F285C2;
   --color-worker-accent: #F7D6EB;
   --color-worker-bg: #FFFFFF;
+  /* Not in the team repo's tokens: added here so neutral headings/body copy
+     have a token instead of the ad hoc #1e293b the onboarding/result use. */
+  --color-worker-text-primary: #1E293B;
   --color-worker-text-secondary: #6B7280;
   --color-worker-text-disabled: #C4C4C4;
   --color-worker-border: #E8E8E8;

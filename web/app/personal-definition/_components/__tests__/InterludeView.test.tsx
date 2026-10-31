@@ -80,3 +80,21 @@ describe("InterludeView teaser", () => {
     expect(screen.getByRole("button", { name: "Đi tiếp" })).toBeInTheDocument();
   });
 });
+
+describe("InterludeView colour", () => {
+  it("sets the heading and body copy in neutral text, not brand pink", () => {
+    render(<InterludeView part={1} preview={preview} onContinue={() => {}} onBack={() => {}} />);
+    const heading = screen.getByRole("heading", { name: "Xong phần 2/4 rồi!" });
+    expect(heading.className).toContain("text-worker-text-primary");
+    expect(screen.getByText(/Tiếp theo:/).className).not.toContain("text-worker-primary");
+    expect(screen.getByText("Còn 20 câu nữa").className).not.toContain("text-worker-primary");
+    expect(screen.getByText(preview.zodiac.traits[0]!).className).not.toContain("text-worker-primary");
+  });
+
+  it("keeps pink text to a single small accent: the teaser badges", () => {
+    const { container } = render(<InterludeView part={1} preview={preview} onContinue={() => {}} onBack={() => {}} />);
+    const pink = Array.from(container.querySelectorAll(".text-worker-primary"));
+    expect(pink.length).toBeGreaterThan(0);
+    for (const el of pink) expect(el).toHaveAttribute("aria-hidden");
+  });
+});
