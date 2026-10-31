@@ -21,6 +21,8 @@ Thêm sau đó: câu hỏi chữ đen đậm (`16c4792`); form chỉ hỏi tên 
 
 Màn kết quả: nút **Chia sẻ kết quả** (Web Share kèm file ảnh, máy không hỗ trợ thì tự tải về), **Tải ảnh về** (PNG 1080×1350 vẽ bằng canvas: tên hiển thị, mascot, nhóm, loại, biệt danh, 4 thanh, không có ngày sinh), và **Khám phá lộ trình nghề nghiệp phù hợp** → CareerPath của team app (`?title=<nghề gợi ý đầu tiên>&mbti=<loại>`, mở tab mới). URL lấy từ biến `NEXT_PUBLIC_CAREERPATH_URL`, mặc định `/careerpath` (đúng khi chạy trong team app; bản standalone trên Vercel **cần set biến này** nếu không sẽ 404). Chưa có analytics nên `share_success` chưa đo được.
 
+Màn kết quả thêm: thẻ **Số chủ đạo của bạn** (số + diễn giải, tính từ ngày sinh; vẫn không hiện cung hoàng đạo và các số theo tên); thẻ thưởng **"Chúc mừng bạn đã khám phá bản thân và nhận ngay phần thưởng xịn tại đây"** → voucher (`NEXT_PUBLIC_VOUCHER_URL` + `NEXT_PUBLIC_VOUCHER_REF_ID`, thêm `?refId=`; **chưa có link/refID**, thẻ đang hiện trạng thái "đang được cập nhật"); thẻ teaser **"Xác định năm cá nhân của bạn có gì tại đây"** gắn nhãn Sắp ra mắt, không bấm được.
+
 **Chưa deploy lên Vercel.** Bản mới đang chạy ở localhost:3000 (production build). Live site vẫn là bản 10-01.
 
 ### Ghi chú

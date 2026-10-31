@@ -36,13 +36,20 @@ describe("SynthesisView", () => {
   it("renders the four sections in order", () => {
     render(<SynthesisView profile={profile} />);
     const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Bốn chiều của bạn", "Điểm mạnh", "Điểm cần cải thiện", "Nghề nghiệp phù hợp"]);
+    expect(headings).toEqual(["Bốn chiều của bạn", "Số chủ đạo của bạn", "Điểm mạnh", "Điểm cần cải thiện", "Nghề nghiệp phù hợp"]);
   });
 
-  it("has no zodiac or numerology anywhere on the screen", () => {
+  it("shows the life path number with its meaning", () => {
+    render(<SynthesisView profile={profile} />);
+    const card = screen.getByTestId("life-path");
+    expect(card).toHaveTextContent(String(profile.numerology.life_path));
+    expect(card).toHaveTextContent(profile.numerology.interpretations.life_path.slice(0, 30));
+  });
+
+  it("shows no zodiac and none of the name-based numbers (the form no longer asks for a legal name)", () => {
     const { container } = render(<SynthesisView profile={profile} />);
     const text = container.textContent ?? "";
-    expect(text).not.toMatch(/Cung |Thần số học|Số Chủ Đạo|Số Sứ Mệnh|Số Linh Hồn|Số Nhân Cách/);
+    expect(text).not.toMatch(/Cung |Số Sứ Mệnh|Số Linh Hồn|Số Nhân Cách/);
     expect(text).not.toContain(profile.zodiac.sun_sign);
   });
 

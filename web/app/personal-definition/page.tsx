@@ -14,6 +14,8 @@ import { QuizPart } from "./_components/QuizPart";
 import { InterludeView } from "./_components/InterludeView";
 import { SynthesisView } from "./_components/SynthesisView";
 import { ResultActions } from "./_components/result/ResultActions";
+import { ResultExtras } from "./_components/result/ResultExtras";
+import { VOUCHER_REF_ID, VOUCHER_URL, voucherUrl } from "./_lib/links";
 import { temperamentOf, TEMPERAMENTS } from "./_lib/temperament";
 
 export default function PersonalDefinitionPage() {
@@ -89,7 +91,12 @@ export default function PersonalDefinitionPage() {
     return (
       <SynthesisView
         profile={state.profile}
-        actions={<ResultActions profile={state.profile} accent={accent} />}
+        actions={
+          <>
+            <ResultActions profile={state.profile} accent={accent} />
+            <ResultExtras accent={accent} voucherHref={voucherUrl(VOUCHER_URL, VOUCHER_REF_ID)} />
+          </>
+        }
       />
     );
   }
