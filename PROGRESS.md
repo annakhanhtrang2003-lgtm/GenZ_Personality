@@ -27,6 +27,8 @@ Tiếp: quiz hiện **đủ 10 câu cùng lúc** (bỏ accordion), trả lời x
 
 Đã **bỏ** thẻ thưởng "Chúc mừng bạn đã khám phá bản thân…" và cấu hình voucher (theo yêu cầu Khanh); chỉ giữ teaser "Năm cá nhân".
 
+Thẻ chi tiết tách đôi: **Số chủ đạo của bạn** (diễn giải + "Mọi người hay nhìn số X là" + "Cùng số X với" người nổi tiếng) và **Cung hoàng đạo của bạn** ("X là người thế nào" + "Mọi người hay nhìn X là" + nét đặc trưng + "Cùng cung X với"). Nội dung mới ở `_lib/data/astro-profiles.json` (tự viết). Danh sách 52 người nổi tiếng ở `_lib/data/famous-birthdays.json`; số/cung của họ do app tự tính. ⚠ **Ngày sinh do Claude soạn từ trí nhớ, cần Khanh kiểm tra từng dòng** trong `docs/famous-birthdays-review.md` trước khi launch. (Theo cách tính của app, Obama là số 2, không phải số 4.)
+
 **Chưa deploy lên Vercel.** Bản mới đang chạy ở localhost:3000 (production build). Live site vẫn là bản 10-01.
 
 ### Ghi chú

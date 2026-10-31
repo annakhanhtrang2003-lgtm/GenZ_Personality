@@ -7,7 +7,7 @@ import { ResultHero } from "./result/ResultHero";
 import { DimensionBreakdown } from "./result/DimensionBreakdown";
 import { StrengthsGrowth } from "./result/StrengthsGrowth";
 import { CareerSection } from "./result/CareerSection";
-import { LifePathCard } from "./result/LifePathCard";
+import { LifePathCard, ZodiacCard } from "./result/LifePathCard";
 
 /**
  * The result screen: four sections in the user's temperament colours.
@@ -31,7 +31,8 @@ export function SynthesisView({ profile, actions }: { profile: PersonalProfile; 
           zodiac={zodiac}
         />
         <DimensionBreakdown mbti={mbti} keywords={synthesis.personality_keywords} accent={accent} />
-        <LifePathCard numerology={numerology} zodiac={zodiac} accent={accent} />
+        <LifePathCard numerology={numerology} accent={accent} />
+        <ZodiacCard zodiac={zodiac} accent={accent} />
         <StrengthsGrowth strengths={synthesis.strengths} growthAreas={synthesis.growth_areas} accent={accent} />
         <CareerSection hints={synthesis.career_hints} accent={accent} />
         {actions}

@@ -1,0 +1,265 @@
+{
+  "_note": "Public birth dates of well-known people. Their số chủ đạo and cung hoàng đạo are NOT stored here: famous.ts computes both with the app's own calculators, so the examples always agree with the user's result. Drafted by Claude from memory — every date must be fact-checked against a public source before launch (review table: docs/famous-birthdays-review.md).",
+  "people": [
+    {
+      "name": "Sơn Tùng M-TP",
+      "known_for": "ca sĩ",
+      "birth_date": "1994-07-05"
+    },
+    {
+      "name": "Mỹ Tâm",
+      "known_for": "ca sĩ",
+      "birth_date": "1981-01-16"
+    },
+    {
+      "name": "Đen Vâu",
+      "known_for": "rapper",
+      "birth_date": "1989-05-13"
+    },
+    {
+      "name": "Trấn Thành",
+      "known_for": "MC, đạo diễn",
+      "birth_date": "1987-02-05"
+    },
+    {
+      "name": "Hoàng Thùy Linh",
+      "known_for": "ca sĩ",
+      "birth_date": "1988-08-11"
+    },
+    {
+      "name": "HIEUTHUHAI",
+      "known_for": "rapper",
+      "birth_date": "1999-09-28"
+    },
+    {
+      "name": "Nguyễn Quang Hải",
+      "known_for": "cầu thủ",
+      "birth_date": "1997-04-12"
+    },
+    {
+      "name": "Ngô Bảo Châu",
+      "known_for": "nhà toán học",
+      "birth_date": "1972-06-28"
+    },
+    {
+      "name": "Đặng Thái Sơn",
+      "known_for": "nghệ sĩ piano",
+      "birth_date": "1958-07-02"
+    },
+    {
+      "name": "Barack Obama",
+      "known_for": "cựu Tổng thống Mỹ",
+      "birth_date": "1961-08-04"
+    },
+    {
+      "name": "Taylor Swift",
+      "known_for": "ca sĩ",
+      "birth_date": "1989-12-13"
+    },
+    {
+      "name": "Elon Musk",
+      "known_for": "doanh nhân",
+      "birth_date": "1971-06-28"
+    },
+    {
+      "name": "Steve Jobs",
+      "known_for": "đồng sáng lập Apple",
+      "birth_date": "1955-02-24"
+    },
+    {
+      "name": "Bill Gates",
+      "known_for": "đồng sáng lập Microsoft",
+      "birth_date": "1955-10-28"
+    },
+    {
+      "name": "Albert Einstein",
+      "known_for": "nhà vật lý",
+      "birth_date": "1879-03-14"
+    },
+    {
+      "name": "Marie Curie",
+      "known_for": "nhà khoa học",
+      "birth_date": "1867-11-07"
+    },
+    {
+      "name": "Lionel Messi",
+      "known_for": "cầu thủ",
+      "birth_date": "1987-06-24"
+    },
+    {
+      "name": "Cristiano Ronaldo",
+      "known_for": "cầu thủ",
+      "birth_date": "1985-02-05"
+    },
+    {
+      "name": "Son Heung-min",
+      "known_for": "cầu thủ",
+      "birth_date": "1992-07-08"
+    },
+    {
+      "name": "Oprah Winfrey",
+      "known_for": "người dẫn chương trình",
+      "birth_date": "1954-01-29"
+    },
+    {
+      "name": "Leonardo DiCaprio",
+      "known_for": "diễn viên",
+      "birth_date": "1974-11-11"
+    },
+    {
+      "name": "Keanu Reeves",
+      "known_for": "diễn viên",
+      "birth_date": "1964-09-02"
+    },
+    {
+      "name": "Thành Long",
+      "known_for": "diễn viên",
+      "birth_date": "1954-04-07"
+    },
+    {
+      "name": "Zendaya",
+      "known_for": "diễn viên",
+      "birth_date": "1996-09-01"
+    },
+    {
+      "name": "Tom Holland",
+      "known_for": "diễn viên",
+      "birth_date": "1996-06-01"
+    },
+    {
+      "name": "Emma Watson",
+      "known_for": "diễn viên",
+      "birth_date": "1990-04-15"
+    },
+    {
+      "name": "Beyoncé",
+      "known_for": "ca sĩ",
+      "birth_date": "1981-09-04"
+    },
+    {
+      "name": "Lady Gaga",
+      "known_for": "ca sĩ",
+      "birth_date": "1986-03-28"
+    },
+    {
+      "name": "Rihanna",
+      "known_for": "ca sĩ, doanh nhân",
+      "birth_date": "1988-02-20"
+    },
+    {
+      "name": "Ariana Grande",
+      "known_for": "ca sĩ",
+      "birth_date": "1993-06-26"
+    },
+    {
+      "name": "Billie Eilish",
+      "known_for": "ca sĩ",
+      "birth_date": "2001-12-18"
+    },
+    {
+      "name": "Ed Sheeran",
+      "known_for": "ca sĩ",
+      "birth_date": "1991-02-17"
+    },
+    {
+      "name": "Justin Bieber",
+      "known_for": "ca sĩ",
+      "birth_date": "1994-03-01"
+    },
+    {
+      "name": "Michael Jackson",
+      "known_for": "ca sĩ",
+      "birth_date": "1958-08-29"
+    },
+    {
+      "name": "Mark Zuckerberg",
+      "known_for": "đồng sáng lập Facebook",
+      "birth_date": "1984-05-14"
+    },
+    {
+      "name": "Jeff Bezos",
+      "known_for": "nhà sáng lập Amazon",
+      "birth_date": "1964-01-12"
+    },
+    {
+      "name": "Walt Disney",
+      "known_for": "nhà sáng lập Disney",
+      "birth_date": "1901-12-05"
+    },
+    {
+      "name": "Jennie",
+      "known_for": "BLACKPINK",
+      "birth_date": "1996-01-16"
+    },
+    {
+      "name": "Lisa",
+      "known_for": "BLACKPINK",
+      "birth_date": "1997-03-27"
+    },
+    {
+      "name": "Rosé",
+      "known_for": "BLACKPINK",
+      "birth_date": "1997-02-11"
+    },
+    {
+      "name": "Jisoo",
+      "known_for": "BLACKPINK",
+      "birth_date": "1995-01-03"
+    },
+    {
+      "name": "RM",
+      "known_for": "BTS",
+      "birth_date": "1994-09-12"
+    },
+    {
+      "name": "Jimin",
+      "known_for": "BTS",
+      "birth_date": "1995-10-13"
+    },
+    {
+      "name": "V",
+      "known_for": "BTS",
+      "birth_date": "1995-12-30"
+    },
+    {
+      "name": "Jungkook",
+      "known_for": "BTS",
+      "birth_date": "1997-09-01"
+    },
+    {
+      "name": "IU",
+      "known_for": "ca sĩ",
+      "birth_date": "1993-05-16"
+    },
+    {
+      "name": "Meryl Streep",
+      "known_for": "diễn viên",
+      "birth_date": "1949-06-22"
+    },
+    {
+      "name": "Will Smith",
+      "known_for": "diễn viên",
+      "birth_date": "1968-09-25"
+    },
+    {
+      "name": "Paul McCartney",
+      "known_for": "nhạc sĩ, The Beatles",
+      "birth_date": "1942-06-18"
+    },
+    {
+      "name": "Angelina Jolie",
+      "known_for": "diễn viên",
+      "birth_date": "1975-06-04"
+    },
+    {
+      "name": "Daniel Radcliffe",
+      "known_for": "diễn viên",
+      "birth_date": "1989-07-23"
+    },
+    {
+      "name": "Jennifer Lopez",
+      "known_for": "ca sĩ, diễn viên",
+      "birth_date": "1969-07-24"
+    }
+  ]
+}

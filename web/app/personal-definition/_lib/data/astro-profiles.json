@@ -1,0 +1,67 @@
+{
+  "_note": "Our own copy (Gen Z voice, no dashes). zodiac.self = what the sign is like; zodiac.others = how people usually see it. life_path.others = how people usually see each Số chủ đạo (its 'self' text is numerology-interpretations.json). Entertainment framing, not claims of fact.",
+  "zodiac": {
+    "Bạch Dương": {
+      "self": "Bạch Dương là kiểu nghĩ là làm, thấy việc là xắn tay áo trước rồi tính sau. Bạn sống thẳng, nóng nhanh nguội nhanh và cực ghét ngồi chờ.",
+      "others": "Mọi người hay thấy Bạch Dương là đứa tiên phong, luôn là người mở bát. Đôi khi bị nghĩ là hơi hấp tấp, nhưng ai cũng công nhận bạn có năng lượng kéo cả nhóm chạy."
+    },
+    "Kim Ngưu": {
+      "self": "Kim Ngưu chậm mà chắc, thích những gì ổn định, thật và cầm nắm được. Đã quyết thì bạn bám tới cùng, và rất biết cách tận hưởng cuộc sống.",
+      "others": "Trong mắt mọi người, Kim Ngưu là chỗ dựa đáng tin, nói ít làm nhiều. Có lúc bị nghĩ là cứng đầu, nhưng ai cũng muốn có một Kim Ngưu trong team."
+    },
+    "Song Tử": {
+      "self": "Song Tử là cái đầu không bao giờ tắt, tò mò đủ thứ và học cái mới siêu nhanh. Bạn đổi mood, đổi ý tưởng liên tục và chán nhất là sự đơn điệu.",
+      "others": "Mọi người hay thấy Song Tử là đứa nói chuyện duyên, đi đâu cũng có chuyện để kể. Đôi khi bị nghĩ là cả thèm chóng chán, nhưng có bạn thì không bao giờ nhạt."
+    },
+    "Cự Giải": {
+      "self": "Cự Giải sống tình cảm, nhớ dai và cực kỳ bảo vệ người mình thương. Bên ngoài có thể hơi khó gần, nhưng bên trong là cả một vùng trời mềm mại.",
+      "others": "Trong mắt mọi người, Cự Giải là người chu đáo, luôn nhớ ai thích gì. Có lúc bị nghĩ là hay suy, nhưng ai cũng thấy ấm lòng khi được bạn quan tâm."
+    },
+    "Sư Tử": {
+      "self": "Sư Tử tự tin, hào phóng và thích được là chính mình một cách rực rỡ. Bạn có máu dẫn dắt và luôn muốn làm mọi thứ thật hoành tráng.",
+      "others": "Mọi người hay thấy Sư Tử là tâm điểm của buổi tiệc, đứng đâu là sáng đó. Đôi khi bị nghĩ là hơi sĩ, nhưng ai cũng công nhận bạn chơi hết mình và cực kỳ bao bọc bạn bè."
+    },
+    "Xử Nữ": {
+      "self": "Xử Nữ để ý chi tiết, thích mọi thứ gọn gàng và đúng chuẩn. Bạn hay tự đặt tiêu chuẩn cao cho mình và thầm lặng giúp người khác theo cách rất thực tế.",
+      "others": "Trong mắt mọi người, Xử Nữ là người tỉ mỉ, giao việc là yên tâm. Có lúc bị nghĩ là khó tính, nhưng ai cũng tìm bạn khi cần một người check lại cho chuẩn."
+    },
+    "Thiên Bình": {
+      "self": "Thiên Bình thích sự hài hòa, cái đẹp và những mối quan hệ dễ chịu. Bạn nhìn được mọi phía của vấn đề, nên chọn lựa đôi khi hơi lâu.",
+      "others": "Mọi người hay thấy Thiên Bình là người khéo ăn nói, có gu và dễ mến. Đôi khi bị nghĩ là hay lưỡng lự, nhưng bạn là người hòa giải số một của cả nhóm."
+    },
+    "Bọ Cạp": {
+      "self": "Bọ Cạp sâu sắc, kín đáo và đã làm gì là làm tới nơi tới chốn. Bạn trung thành tuyệt đối với người mình tin và có trực giác nhạy như radar.",
+      "others": "Trong mắt mọi người, Bọ Cạp là người bí ẩn, nhìn một cái là như đọc vị được. Có lúc bị nghĩ là khó đoán, nhưng ai được bạn coi là người nhà thì được bảo vệ hết cỡ."
+    },
+    "Nhân Mã": {
+      "self": "Nhân Mã yêu tự do, mê khám phá và luôn nhìn đời bằng con mắt lạc quan. Bạn nói thẳng, thích đi đây đi đó và học bằng trải nghiệm.",
+      "others": "Mọi người hay thấy Nhân Mã là đứa vui tính, rủ đi đâu cũng gật. Đôi khi bị nghĩ là hơi vô tư quá, nhưng có bạn là chuyến đi nào cũng thành kỷ niệm."
+    },
+    "Ma Kết": {
+      "self": "Ma Kết có kỷ luật, có mục tiêu dài hạn và chịu khó leo từng bậc một. Bạn nghiêm túc với trách nhiệm, nhưng thân rồi mới thấy bạn hài hước kiểu rất riêng.",
+      "others": "Trong mắt mọi người, Ma Kết là người trưởng thành sớm, đáng tin và làm được việc. Có lúc bị nghĩ là khô khan, nhưng ai cũng muốn có bạn khi cần một kế hoạch chắc chắn."
+    },
+    "Bảo Bình": {
+      "self": "Bảo Bình độc lập, nghĩ khác người và luôn có những ý tưởng đi trước thời đại. Bạn quý tự do cá nhân và quan tâm tới những chuyện lớn hơn bản thân.",
+      "others": "Mọi người hay thấy Bảo Bình là đứa độc lạ, có suy nghĩ chẳng giống ai. Đôi khi bị nghĩ là hơi xa cách, nhưng bạn là người mang tới góc nhìn mới cho cả nhóm."
+    },
+    "Song Ngư": {
+      "self": "Song Ngư giàu tưởng tượng, nhạy cảm và rất dễ đồng cảm với người khác. Bạn sống nhiều trong thế giới riêng và có tâm hồn nghệ sĩ.",
+      "others": "Trong mắt mọi người, Song Ngư là người dịu dàng, nghe chuyện ai cũng thấu. Có lúc bị nghĩ là mơ mộng, nhưng ai cũng thấy được an ủi khi ở cạnh bạn."
+    }
+  },
+  "life_path": {
+    "1": { "others": "Mọi người hay thấy số 1 là người tự lập, dám đi đầu và có chính kiến rõ ràng. Đôi khi hơi cứng, nhưng ai cũng tin bạn sẽ mở đường." },
+    "2": { "others": "Trong mắt mọi người, số 2 là người tinh tế, khéo léo và giỏi kết nối. Bạn là kiểu người ai cũng muốn tâm sự." },
+    "3": { "others": "Mọi người hay thấy số 3 là người vui vẻ, sáng tạo và nói chuyện cuốn. Có bạn là không khí sôi hẳn lên." },
+    "4": { "others": "Trong mắt mọi người, số 4 là người chăm chỉ, có nguyên tắc và cực kỳ đáng tin. Giao việc cho bạn là yên tâm." },
+    "5": { "others": "Mọi người hay thấy số 5 là người năng động, thích trải nghiệm và thích nghi siêu nhanh. Đi với bạn là không bao giờ chán." },
+    "6": { "others": "Trong mắt mọi người, số 6 là người chu đáo, có trách nhiệm và hay lo cho người khác. Bạn là chỗ dựa của cả nhóm." },
+    "7": { "others": "Mọi người hay thấy số 7 là người sâu sắc, thích suy ngẫm và có chiều sâu. Có lúc hơi kín, nhưng nói câu nào là thấm câu đó." },
+    "8": { "others": "Trong mắt mọi người, số 8 là người có tham vọng, quyết đoán và giỏi biến ý tưởng thành kết quả. Bạn toát ra khí chất leader." },
+    "9": { "others": "Mọi người hay thấy số 9 là người bao dung, nhìn đời rộng và hay nghĩ cho người khác. Bạn là kiểu người truyền cảm hứng." },
+    "11": { "others": "Trong mắt mọi người, số 11 là người có trực giác nhạy và rất truyền cảm hứng. Bạn hay nói trúng điều người khác đang nghĩ." },
+    "22": { "others": "Mọi người hay thấy số 22 là người có tầm nhìn lớn mà vẫn làm được việc thực tế. Bạn là kiểu biến giấc mơ thành dự án." },
+    "33": { "others": "Trong mắt mọi người, số 33 là người ấm áp, tận tâm và luôn muốn nâng đỡ người khác. Ở cạnh bạn ai cũng thấy được chữa lành." }
+  }
+}

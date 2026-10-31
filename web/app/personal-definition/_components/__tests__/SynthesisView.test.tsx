@@ -4,6 +4,7 @@ import { SynthesisView } from "../SynthesisView";
 import { dominantPole } from "../../_lib/poles";
 import type { Dimension } from "../../_lib/types";
 import { profile } from "./fixtures";
+import { famousWithLifePath, famousWithSign, lifePathOthers, zodiacProfile } from "../../_lib/famous";
 
 const DIMENSIONS: Dimension[] = ["EI", "SN", "TF", "JP"];
 
@@ -36,7 +37,7 @@ describe("SynthesisView", () => {
   it("renders the four sections in order", () => {
     render(<SynthesisView profile={profile} />);
     const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Bốn chiều của bạn", "Số chủ đạo & cung hoàng đạo", "Điểm mạnh", "Điểm cần cải thiện", "Nghề nghiệp phù hợp"]);
+    expect(headings).toEqual(["Bốn chiều của bạn", "Số chủ đạo của bạn", "Cung hoàng đạo của bạn", "Điểm mạnh", "Điểm cần cải thiện", "Nghề nghiệp phù hợp"]);
   });
 
   it("puts the mascot card on the left and life path + zodiac on the right, above the details", () => {
@@ -51,11 +52,26 @@ describe("SynthesisView", () => {
     expect(top.compareDocumentPosition(h1) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it("gives the full life path meaning and the zodiac traits in the details", () => {
+  it("details the life path: meaning, how others see it, famous people with the same number", () => {
     render(<SynthesisView profile={profile} />);
     const card = screen.getByTestId("life-path");
+    const n = profile.numerology.life_path;
     expect(card).toHaveTextContent(profile.numerology.interpretations.life_path);
+    expect(card).toHaveTextContent(lifePathOthers(n)!);
+    expect(card).toHaveTextContent(`Cùng số ${n} với`);
+    for (const f of famousWithLifePath(n)) expect(card).toHaveTextContent(f.name);
+  });
+
+  it("details the sign: what it is like, how others see it, traits, famous people", () => {
+    render(<SynthesisView profile={profile} />);
+    const card = screen.getByTestId("zodiac-card");
+    const sign = profile.zodiac.sun_sign;
+    expect(card).toHaveTextContent(`${sign} là người thế nào`);
+    expect(card).toHaveTextContent(zodiacProfile(sign)!.self);
+    expect(card).toHaveTextContent(`Mọi người hay nhìn ${sign}`);
+    expect(card).toHaveTextContent(zodiacProfile(sign)!.others);
     for (const t of profile.zodiac.traits) expect(card).toHaveTextContent(t);
+    for (const f of famousWithSign(sign)) expect(card).toHaveTextContent(f.name);
   });
 
   it("shows none of the name-based numbers (the form no longer asks for a legal name)", () => {
