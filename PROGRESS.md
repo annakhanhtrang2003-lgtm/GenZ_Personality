@@ -19,6 +19,8 @@ Kiểm tra trong trình duyệt (Playwright, bản build production): đo đư�
 
 Thêm sau đó: câu hỏi chữ đen đậm (`16c4792`); form chỉ hỏi tên hiển thị, bỏ họ tên đầy đủ (`3e2ba30`); màn nghỉ dùng màu + mascot đầy đủ của thẻ phần, chữ đậm, copy Gen Z không gạch ngang; tách 2 khối (thẻ mascot nhỏ hơn + thẻ kết luận), confetti + bong bóng chúc mừng, ô "💡 Mách nhỏ".
 
+Màn kết quả: nút **Chia sẻ kết quả** (Web Share kèm file ảnh, máy không hỗ trợ thì tự tải về), **Tải ảnh về** (PNG 1080×1350 vẽ bằng canvas: tên hiển thị, mascot, nhóm, loại, biệt danh, 4 thanh, không có ngày sinh), và **Khám phá lộ trình nghề nghiệp phù hợp** → CareerPath của team app (`?title=<nghề gợi ý đầu tiên>&mbti=<loại>`, mở tab mới). URL lấy từ biến `NEXT_PUBLIC_CAREERPATH_URL`, mặc định `/careerpath` (đúng khi chạy trong team app; bản standalone trên Vercel **cần set biến này** nếu không sẽ 404). Chưa có analytics nên `share_success` chưa đo được.
+
 **Chưa deploy lên Vercel.** Bản mới đang chạy ở localhost:3000 (production build). Live site vẫn là bản 10-01.
 
 ### Ghi chú

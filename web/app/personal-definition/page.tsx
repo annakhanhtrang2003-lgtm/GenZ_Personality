@@ -13,6 +13,8 @@ import { OnboardingForm } from "./_components/OnboardingForm";
 import { QuizPart } from "./_components/QuizPart";
 import { InterludeView } from "./_components/InterludeView";
 import { SynthesisView } from "./_components/SynthesisView";
+import { ResultActions } from "./_components/result/ResultActions";
+import { temperamentOf, TEMPERAMENTS } from "./_lib/temperament";
 
 export default function PersonalDefinitionPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -83,7 +85,13 @@ export default function PersonalDefinitionPage() {
   // The result paints its own full-bleed temperament background and
   // constrains its content internally, so it sits outside the container.
   if (state.phase === "synthesis" && state.profile) {
-    return <SynthesisView profile={state.profile} />;
+    const { accent } = TEMPERAMENTS[temperamentOf(state.profile.mbti.type)];
+    return (
+      <SynthesisView
+        profile={state.profile}
+        actions={<ResultActions profile={state.profile} accent={accent} />}
+      />
+    );
   }
 
   return (
