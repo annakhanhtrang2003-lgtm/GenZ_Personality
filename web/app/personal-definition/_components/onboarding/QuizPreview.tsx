@@ -115,6 +115,28 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
     };
   }, []);
 
+  /**
+   * Where the last press on the track began. A pointer click whose finger
+   * moved, or whose track scrolled underneath it, was a swipe — not a pick.
+   * Keyboard activation (Enter/Space on the button) has `detail === 0` and
+   * is never treated as a swipe.
+   */
+  const pressRef = useRef<{ x: number; y: number; scroll: number } | null>(null);
+  const SWIPE_SLOP = 10;
+
+  const onCardClick = (e: React.MouseEvent) => {
+    const press = pressRef.current;
+    const track = trackRef.current;
+    if (e.detail > 0 && press && track) {
+      const moved =
+        Math.abs(e.clientX - press.x) > SWIPE_SLOP ||
+        Math.abs(e.clientY - press.y) > SWIPE_SLOP ||
+        Math.abs(track.scrollLeft - press.scroll) > SWIPE_SLOP;
+      if (moved) return;
+    }
+    onStart();
+  };
+
   // Element.scrollTo is optional-called: jsdom and some old WebViews lack it.
   // `active` is set directly so the dot reflects the choice either way.
   const goTo = (i: number) => {
@@ -151,6 +173,9 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
           tabIndex={0}
           aria-label="4 phần của bài test, vuốt ngang để xem"
           onScroll={() => window.requestAnimationFrame(syncActive)}
+          onPointerDown={(e) => {
+            pressRef.current = { x: e.clientX, y: e.clientY, scroll: e.currentTarget.scrollLeft };
+          }}
           className="relative mt-5 flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-px-6 px-6 pt-1.5 pb-[18px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-2 focus-visible:outline-[#ec4899] focus-visible:-outline-offset-2 rounded-xl"
         >
           {PART_THEMES.map((t, i) => (
@@ -160,7 +185,7 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
             >
               <article
                 aria-labelledby={`pd-qp-${i}`}
-                className="w-full flex flex-col p-2 rounded-[18px]"
+                className="relative w-full flex flex-col p-2 rounded-[18px] cursor-pointer transition-transform duration-150 hover:-translate-y-1 active:scale-[.97] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100"
                 style={{ backgroundColor: t.bg, boxShadow: `0 0 0 1px ${t.ring}, 0 4px 10px rgba(148,163,184,.16)` }}
               >
                 <div className="aspect-square rounded-[14px] overflow-hidden flex items-end justify-center" style={{ background: t.well }}>
@@ -185,7 +210,15 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
                   ))}
                 </p>
                 <h3 id={`pd-qp-${i}`} className="mt-1 text-[13px] leading-[1.35] font-bold text-[#1e293b] text-pretty">
-                  {CARDS[i]!.title}
+                  {/* Stretched button: its ::after covers the whole card, so
+                      the card is one tap target with the title as its name. */}
+                  <button
+                    type="button"
+                    onClick={onCardClick}
+                    className="text-left cursor-pointer after:absolute after:inset-0 after:rounded-[18px] after:content-[''] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-[#ec4899]"
+                  >
+                    {CARDS[i]!.title}
+                  </button>
                 </h3>
               </article>
             </li>
