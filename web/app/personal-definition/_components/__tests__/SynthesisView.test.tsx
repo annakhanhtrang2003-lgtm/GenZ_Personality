@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { SynthesisView } from "../SynthesisView";
 import { dominantPole } from "../../_lib/poles";
 import type { Dimension } from "../../_lib/types";
@@ -36,21 +36,31 @@ describe("SynthesisView", () => {
   it("renders the four sections in order", () => {
     render(<SynthesisView profile={profile} />);
     const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Bốn chiều của bạn", "Số chủ đạo của bạn", "Điểm mạnh", "Điểm cần cải thiện", "Nghề nghiệp phù hợp"]);
+    expect(headings).toEqual(["Bốn chiều của bạn", "Số chủ đạo & cung hoàng đạo", "Điểm mạnh", "Điểm cần cải thiện", "Nghề nghiệp phù hợp"]);
   });
 
-  it("shows the life path number with its meaning", () => {
+  it("puts the mascot card on the left and life path + zodiac on the right, above the details", () => {
+    render(<SynthesisView profile={profile} />);
+    const top = screen.getByTestId("result-top");
+    const [left, right] = Array.from(top.children);
+    expect(left).toContainElement(screen.getByTestId("sticker-card"));
+    expect(within(right as HTMLElement).getByTestId("hero-life-path")).toHaveTextContent(String(profile.numerology.life_path));
+    expect(within(right as HTMLElement).getByTestId("hero-zodiac")).toHaveTextContent(profile.zodiac.sun_sign);
+    // The top row comes before the type heading and every details section.
+    const h1 = screen.getByRole("heading", { level: 1 });
+    expect(top.compareDocumentPosition(h1) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("gives the full life path meaning and the zodiac traits in the details", () => {
     render(<SynthesisView profile={profile} />);
     const card = screen.getByTestId("life-path");
-    expect(card).toHaveTextContent(String(profile.numerology.life_path));
-    expect(card).toHaveTextContent(profile.numerology.interpretations.life_path.slice(0, 30));
+    expect(card).toHaveTextContent(profile.numerology.interpretations.life_path);
+    for (const t of profile.zodiac.traits) expect(card).toHaveTextContent(t);
   });
 
-  it("shows no zodiac and none of the name-based numbers (the form no longer asks for a legal name)", () => {
+  it("shows none of the name-based numbers (the form no longer asks for a legal name)", () => {
     const { container } = render(<SynthesisView profile={profile} />);
-    const text = container.textContent ?? "";
-    expect(text).not.toMatch(/Cung |Số Sứ Mệnh|Số Linh Hồn|Số Nhân Cách/);
-    expect(text).not.toContain(profile.zodiac.sun_sign);
+    expect(container.textContent ?? "").not.toMatch(/Số Sứ Mệnh|Số Linh Hồn|Số Nhân Cách/);
   });
 
   it("paints the page in the temperament tint", () => {
