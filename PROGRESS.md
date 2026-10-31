@@ -31,6 +31,8 @@ Thẻ chi tiết tách đôi: **Số chủ đạo của bạn** (diễn giải +
 
 Đã **bỏ** thẻ Điểm mạnh / Điểm cần cải thiện và nút "Khám phá lộ trình nghề nghiệp phù hợp" (cùng biến NEXT_PUBLIC_CAREERPATH_URL). Thẻ "Nghề nghiệp phù hợp" vẫn giữ.
 
+**Hợp nhau** (tính năng mới): spec + toàn bộ nội dung ở `docs/hop-nhau-spec.md`, CHƯA CODE, chờ Khanh quyết Q1–Q9.
+
 **Chưa deploy lên Vercel.** Bản mới đang chạy ở localhost:3000 (production build). Live site vẫn là bản 10-01.
 
 ### Ghi chú
