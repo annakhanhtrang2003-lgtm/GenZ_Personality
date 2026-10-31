@@ -119,3 +119,21 @@ describe("InterludeView colour", () => {
     for (const el of pink) expect(el).toHaveAttribute("aria-hidden");
   });
 });
+
+describe("InterludeView part theme", () => {
+  it.each([0, 1, 2, 3])("part %i wears its landing card's colours and full mascot", async (part) => {
+    const { PART_THEMES } = await import("../../_lib/partTheme");
+    const { srcOf } = await import("../../_lib/mascot");
+    const t = PART_THEMES[part]!;
+    render(<InterludeView {...extra} part={part} onContinue={() => {}} onBack={() => {}} />);
+    const card = screen.getByTestId("interlude-card");
+    expect(card).toHaveStyle({ backgroundColor: t.bg });
+    expect(card.querySelector("img")).toHaveAttribute("src", srcOf(t.mascot));
+    expect(card).toHaveTextContent(`${t.letters[0]} ↔ ${t.letters[1]}`);
+  });
+
+  it("sets the conclusion in bold", () => {
+    render(<InterludeView {...extra} part={0} onContinue={() => {}} onBack={() => {}} />);
+    expect(screen.getByTestId("interlude-line").className).toContain("font-bold");
+  });
+});

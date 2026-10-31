@@ -19,19 +19,30 @@
 .popIn         { animation: pd-pop 320ms ease-out both, pd-float 3s ease-in-out 320ms infinite; }
 .bounceIn      { animation: pd-pop 320ms ease-out both; }
 
+@keyframes pd-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Break-screen copy rises in after the mascot pops. */
+.fadeUp        { animation: pd-fade-up 420ms ease-out 180ms both; }
+.fadeUpLate    { animation: pd-fade-up 420ms ease-out 360ms both; }
+
 /* The rasteriser records a single frame. Anything mid-animation exports
    crooked, so capture pins every mascot back to its resting transform. */
 :global([data-capturing]) .pulseOnChange,
 :global([data-capturing]) .float,
 :global([data-capturing]) .popIn,
-:global([data-capturing]) .bounceIn {
+:global([data-capturing]) .bounceIn,
+:global([data-capturing]) .fadeUp,
+:global([data-capturing]) .fadeUpLate {
   animation: none !important;
   transform: none !important;
   opacity: 1 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulseOnChange, .float, .popIn, .bounceIn {
+  .pulseOnChange, .float, .popIn, .bounceIn, .fadeUp, .fadeUpLate {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;

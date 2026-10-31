@@ -87,3 +87,10 @@ describe("interlude copy", () => {
     expect(RESULT_HOOK.length).toBeGreaterThan(0);
   });
 });
+
+describe("interlude copy voice", () => {
+  it("never strings sentences together with a dash", () => {
+    const lines = [...Object.values(SUMMARY_COPY).flatMap((c) => [c.clear, c.balanced]), RESULT_HOOK];
+    for (const line of lines) expect(line).not.toMatch(/[—–]| - /);
+  });
+});
