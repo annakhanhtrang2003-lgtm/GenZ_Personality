@@ -1,0 +1,37 @@
+# PROGRESS
+
+Live: https://personality-test-virid.vercel.app (Vercel `personality-test`, manual CLI deploy from `web/`).
+Branch: `feature/personal-definition/ui`. North Star: see `CLAUDE.md`.
+
+## 2026-10-31 — UI round from user feedback
+
+| # | Việc | Trạng thái | Commit |
+|---|---|---|---|
+| 1 | Landing: carousel nhỏ lại, ~2.5 thẻ trên mobile, cả 4 trên desktop (md+), tự cuộn chậm | ✅ | `91e225a` |
+| 2 | Bấm thẻ để vào bài test (hover/active, cursor, Enter, vuốt không kích hoạt) | ✅ | `1f470af` |
+| 3 | CTA mobile: hiện không cần cuộn ở 375×667 / 390×844 / 360×740 + sticky dự phòng có safe-area | ✅ | `d90af5b` |
+| 4 | Màn nghỉ: tóm tắt sau mỗi phần | ⏸ **Chờ duyệt nội dung** `docs/interlude-copy.md` (+3 câu hỏi) | `c9b8c2e` (chỉ doc) |
+| 5 | Màn nghỉ: bỏ chữ hồng, chuyển sang chữ trung tính | ✅ | `04fda27` |
+
+**Kiểm tra:** 329/329 test, `tsc --noEmit` sạch, `next build` pass. **Không có script lint** (không cài ESLint), nên chưa chạy lint.
+Kiểm tra trong trình duyệt (Playwright, bản build production): đo được 2.5 thẻ ở cả 3 viewport, CTA nằm trong màn hình; sticky ẩn ở hero / hiện khi CTA khuất / ẩn ở cuối trang; tự cuộn chạy, dừng tại chỗ khi chạm, không chạy khi bật reduced motion; tap và Enter trên thẻ đều mở form.
+Ảnh trước/sau: `docs/screenshots/2026-10-31-feedback-round/`.
+
+**Chưa deploy.** Live site vẫn là bản 10-01.
+
+### Ghi chú
+- Thẻ carousel bỏ dòng mô tả dài và tên cực (tên cực vẫn còn cho screen reader); thanh chấm và dòng "Vuốt ngang" ẩn từ md trở lên (cả 4 thẻ đã vừa màn hình).
+- Thêm token `--color-worker-text-primary: #1E293B` vào `web/app/globals.css`. Team repo không có token chữ chính.
+- Root layout thêm `viewport-fit=cover` để `env(safe-area-inset-bottom)` có giá trị trên iPhone.
+- `next dev/build` cảnh báo workspace root bị đoán thành `C:\Users\KHANH TRANG` (có nhiều lockfile). Chưa sửa.
+- `merchant_job_board` (team repo) **chưa** nhận các thay đổi này.
+
+### Chữ hồng ở các màn khác (đã liệt kê, CHƯA sửa)
+1. `QuizItem.tsx:36`: toàn bộ câu hỏi chưa trả lời + câu đang mở dùng `text-worker-primary`. Cả danh sách 10 câu đều hồng.
+2. `LikertScale.tsx:72`: nhãn đáp án đã chọn ("Hơi giống mình"…) màu hồng.
+3. `QuizPart.tsx:75`: tiêu đề phần ("Bạn giữa mọi người") theo màu phần, phần 1 là hồng `#db2777`.
+4. `Hero.tsx:50`: nửa sau tiêu đề "Bạn có đang lạc lối?" gradient hồng→tím.
+5. `OnboardingForm.tsx:70`: chữ "bản thân" trong tiêu đề form gradient hồng→tím.
+6. `QuizPreview.tsx`: dòng eyebrow "40 CÂU HỎI · 4 PHẦN" `#ec4899`; nhãn "Phần 1 · Câu 1–10" + chữ E↔I trên thẻ 1 màu hồng.
+7. Kết quả, nhóm **Nhóm Lý Tưởng (NF)**: accent `#be185d`, nên tên loại (h1), nhãn cực thắng, tiêu đề/chip các thẻ kết quả đều hồng với INFP/INFJ/ENFP/ENFJ.
+8. (Icon, không phải chữ) dấu ✓ câu đã trả lời `QuizItem.tsx:42`.
