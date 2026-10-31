@@ -25,7 +25,13 @@ const TRACK_PAD = 24;
 /** Auto-scroll: a slow drift that hints "there is more to the right". */
 const AUTO_SPEED = 22; // px per second
 export const AUTO_START_DELAY = 1200; // ms on screen before it starts
-const STOP_EVENTS = ["pointerdown", "touchstart", "mouseenter", "wheel", "keydown", "focusin"] as const;
+/** Share of the real CTA that must be on screen before the sticky bar hides. */
+const CTA_VISIBLE_RATIO = 0.9;
+
+const CTA_CLASS =
+  "w-full rounded-full py-4 px-6 text-[17px] font-bold text-white bg-[linear-gradient(90deg,#ec4899,#fb7185)] shadow-[0_10px_20px_-6px_rgba(236,72,153,.45)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f9a8d4]";
+
+const STOP_EVENTS = ["pointerdown", "touchstart", "wheel", "keydown", "focusin"] as const;
 
 export function QuizPreview({ onStart }: { onStart: () => void }) {
   const trackRef = useRef<HTMLOListElement>(null);
@@ -49,7 +55,10 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
   /**
    * Drifts the track right once it is mostly on screen, then stops for good
    * at the last card (no wrap, so no jump back) or the moment the person
-   * touches, swipes, hovers, scrolls or tabs into it. Never runs under
+   * touches, swipes, hovers, scrolls or tabs into it. "Hover" means a mouse
+   * that actually moves: a still cursor that the page scrolls the track
+   * under (the hero CTA's smooth scroll does exactly that) fires mouseenter
+   * and synthetic zero-movement mousemoves, and must not count. Never runs under
    * prefers-reduced-motion. Snap is suspended while drifting — mandatory
    * snap would pull every sub-pixel step back to the nearest card.
    */
@@ -70,12 +79,28 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
       clearTimeout(timer);
       window.cancelAnimationFrame(raf);
     };
-    const stop = () => {
+    // Re-enabling snap makes the browser jump to the nearest card at once,
+    // which on a plain tap reads as the carousel lurching backwards. So snap
+    // stays off where the drift stopped and comes back with the person's own
+    // first scroll (swipe, wheel, arrow keys) — or right away at the end,
+    // which is itself a valid snap position.
+    const restoreSnap = () => {
+      track.style.scrollSnapType = "";
+      track.removeEventListener("scroll", onUserScroll);
+    };
+    let stoppedAt = 0;
+    const onUserScroll = () => {
+      if (Math.abs(track.scrollLeft - stoppedAt) > 2) restoreSnap();
+    };
+    const stop = (atEnd = false) => {
       if (done) return;
       done = true;
       pause();
-      track.style.scrollSnapType = "";
+      if (atEnd || !track.style.scrollSnapType) return restoreSnap();
+      stoppedAt = track.scrollLeft;
+      track.addEventListener("scroll", onUserScroll, { passive: true });
     };
+    const stopOnInput = () => stop();
     const frame = (t: number) => {
       if (!running) return;
       if (last) pos += ((t - last) / 1000) * AUTO_SPEED;
@@ -83,7 +108,7 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
       const max = track.scrollWidth - track.clientWidth;
       if (pos >= max) {
         track.scrollLeft = Math.max(0, max);
-        stop();
+        stop(true);
         return;
       }
       track.scrollLeft = pos;
@@ -107,11 +132,17 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
       { threshold: 0.6 },
     );
     io.observe(track);
-    STOP_EVENTS.forEach((ev) => track.addEventListener(ev, stop, { passive: true }));
+    const onMouseMove = (e: MouseEvent) => {
+      if (e.movementX || e.movementY) stopOnInput();
+    };
+    STOP_EVENTS.forEach((ev) => track.addEventListener(ev, stopOnInput, { passive: true }));
+    track.addEventListener("mousemove", onMouseMove, { passive: true });
     return () => {
       io.disconnect();
       pause();
-      STOP_EVENTS.forEach((ev) => track.removeEventListener(ev, stop));
+      STOP_EVENTS.forEach((ev) => track.removeEventListener(ev, stopOnInput));
+      track.removeEventListener("mousemove", onMouseMove);
+      track.removeEventListener("scroll", onUserScroll);
     };
   }, []);
 
@@ -137,6 +168,47 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
     onStart();
   };
 
+  /**
+   * Sticky CTA (mobile only): shown while the preview section owns the
+   * screen (its top is above mid-viewport — so never on the hero, which has
+   * its own CTA) and the real CTA is not (nearly) fully in view. A sliver of
+   * the real button at the screen edge does not count as visible. Once 90%
+   * of it shows it sits where the bar is, the bar hides, and nothing at the
+   * end of the page is ever covered.
+   */
+  const sectionRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLButtonElement>(null);
+  const [sticky, setSticky] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const cta = ctaRef.current;
+    if (!section || !cta || typeof IntersectionObserver === "undefined") return;
+    let inSection = false;
+    let ctaInView = false;
+    const sync = () => setSticky(inSection && !ctaInView);
+    const sectionIO = new IntersectionObserver(
+      ([e]) => {
+        inSection = !!e?.isIntersecting;
+        sync();
+      },
+      { rootMargin: "0px 0px -50% 0px" },
+    );
+    const ctaIO = new IntersectionObserver(
+      ([e]) => {
+        ctaInView = !!e && e.intersectionRatio >= CTA_VISIBLE_RATIO;
+        sync();
+      },
+      { threshold: [0, CTA_VISIBLE_RATIO, 1] },
+    );
+    sectionIO.observe(section);
+    ctaIO.observe(cta);
+    return () => {
+      sectionIO.disconnect();
+      ctaIO.disconnect();
+    };
+  }, []);
+
   // Element.scrollTo is optional-called: jsdom and some old WebViews lack it.
   // `active` is set directly so the dot reflects the choice either way.
   const goTo = (i: number) => {
@@ -151,6 +223,7 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
 
   return (
     <section
+      ref={sectionRef}
       id={PREVIEW_ID}
       aria-labelledby="pd-qp-title"
       className="relative -mt-8 bg-white rounded-t-[28px] pt-9 pb-10 shadow-[0_-8px_24px_rgba(131,24,67,.06)]"
@@ -246,15 +319,22 @@ export function QuizPreview({ onStart }: { onStart: () => void }) {
         </p>
 
         <div className="mt-6 px-6 max-w-[600px] mx-auto">
-          <button
-            type="button"
-            onClick={onStart}
-            className="w-full rounded-full py-4 px-6 text-[17px] font-bold text-white bg-[linear-gradient(90deg,#ec4899,#fb7185)] shadow-[0_10px_20px_-6px_rgba(236,72,153,.45)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f9a8d4]"
-          >
+          <button ref={ctaRef} type="button" onClick={onStart} className={CTA_CLASS}>
             Làm bài test ngay
           </button>
         </div>
       </div>
+
+      {sticky && (
+        <div
+          data-testid="sticky-cta"
+          className="fixed inset-x-0 bottom-0 z-20 md:hidden bg-white/95 backdrop-blur-sm border-t border-[#fce7f3] px-6 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]"
+        >
+          <button type="button" onClick={onStart} className={CTA_CLASS}>
+            Làm bài test ngay
+          </button>
+        </div>
+      )}
     </section>
   );
 }
