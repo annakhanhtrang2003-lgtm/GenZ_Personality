@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import PersonalDefinitionPage from "../../page";
-import { PART_COUNT, PART_SIZE } from "../../_lib/parts";
+import { PART_COUNT, PART_SIZE, firstIndexOfPart } from "../../_lib/parts";
 
 /**
  * Fills every onboarding field with a valid value. Reused by the scroll-reset
@@ -95,10 +95,11 @@ describe("full quiz flow", () => {
     const teaserSeen: boolean[] = [];
 
     for (let part = 0; part < PART_COUNT; part++) {
-      // Pointer clicks (detail: 1) — auto-advance opens each next row, so
-      // the currently-open row's radios are always the ones on screen.
+      // Every question is on screen at once; answer each row with a pointer
+      // click (detail: 1), which is what drives the auto-scroll.
       for (let row = 0; row < PART_SIZE; row++) {
-        fireEvent.click(screen.getAllByRole("radio")[0]!, { detail: 1 });
+        const rowEl = document.getElementById(`quiz-row-${firstIndexOfPart(part) + row}`)!;
+        fireEvent.click(within(rowEl).getAllByRole("radio")[0]!, { detail: 1 });
       }
 
       const isLastPart = part === PART_COUNT - 1;
@@ -123,7 +124,7 @@ describe("page scroll reset", () => {
     fillOnboarding();
     fireEvent.click(screen.getByRole("button", { name: /^bắt đầu$/i }));
 
-    expect(screen.getAllByRole("radio")).toHaveLength(5); // now on the quiz
+    expect(screen.getAllByRole("radio")).toHaveLength(50); // now on the quiz: 10 questions, all shown
     expect(scrollTo).toHaveBeenCalledWith(0, 0);
   });
 });

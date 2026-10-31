@@ -10,56 +10,50 @@ type Props = {
   index: number;
   text: string;
   value: Response | null;
-  isOpen: boolean;
-  onToggle: () => void;
+  /** The row the flow is on — where QuizPart scrolls after each tap. */
+  isCurrent: boolean;
   /** `advance` distinguishes a pointer/touch answer from a keyboard one — see LikertScale. */
   onAnswer: (v: Response, advance: boolean) => void;
 };
 
-export function QuizItem({ index, text, value, isOpen, onToggle, onAnswer }: Props) {
+/**
+ * One question, always fully shown with its scale (no accordion). An
+ * answered row dims once the flow moves past it, so the current question
+ * stands out; hovering or focusing it brings it back to full strength.
+ */
+export function QuizItem({ index, text, value, isCurrent, onAnswer }: Props) {
   const ordinal = indexWithinPart(index) + 1;
   const answered = value !== null;
+  const dimmed = answered && !isCurrent;
 
   return (
-    <div className="border-b border-worker-border last:border-b-0">
-      <button
-        id={`quiz-row-toggle-${index}`}
-        type="button"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        aria-controls={`likert-panel-${index}`}
-        className="w-full flex items-start gap-3 py-3 text-left"
-      >
+    <div
+      id={`quiz-row-${index}`}
+      data-current={isCurrent ? "true" : "false"}
+      data-dimmed={dimmed ? "true" : "false"}
+      className={`border-b border-worker-border last:border-b-0 py-4 scroll-mt-24 transition-opacity duration-300 motion-reduce:transition-none ${
+        dimmed ? "opacity-50 hover:opacity-100 focus-within:opacity-100" : ""
+      }`}
+    >
+      <p className="flex items-start gap-3">
         <span className="w-5 shrink-0 text-sm text-worker-text-secondary">{ordinal}.</span>
-        <span
-          className={`flex-1 text-sm ${
-            answered && !isOpen ? "text-worker-text-secondary" : "text-worker-text-primary font-semibold"
-          }`}
-        >
-          {text}
-        </span>
-        {answered ? (
+        <span className="flex-1 text-[15px] leading-snug text-worker-text-primary font-semibold">{text}</span>
+        {answered && (
           <span data-testid="row-answered" className="shrink-0 text-sm text-worker-primary" aria-hidden>
             ✓
           </span>
-        ) : (
-          <span className="shrink-0 text-sm text-worker-text-secondary" aria-hidden>
-            {isOpen ? "⌄" : "›"}
-          </span>
         )}
-      </button>
+      </p>
 
-      {isOpen && (
-        <div id={`likert-panel-${index}`} className="pb-4 pl-8 pr-2">
-          <LikertScale
-            options={likertFor(index)}
-            value={value}
-            onChange={onAnswer}
-            questionId={String(index)}
-            question={`Câu hỏi: ${text}`}
-          />
-        </div>
-      )}
+      <div className="pt-3 pl-8 pr-2">
+        <LikertScale
+          options={likertFor(index)}
+          value={value}
+          onChange={onAnswer}
+          questionId={String(index)}
+          question={`Câu hỏi: ${text}`}
+        />
+      </div>
     </div>
   );
 }

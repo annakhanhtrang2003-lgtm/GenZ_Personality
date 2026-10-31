@@ -19,13 +19,12 @@ type Props = {
   open: number | null;
   /** `advance` distinguishes a pointer/touch answer from a keyboard one — see LikertScale. */
   onAnswer: (index: number, v: Response, advance: boolean) => void;
-  onToggle: (index: number) => void;
   onFinishPart: () => void;
   onBack: () => void;
 };
 
 export function QuizPart({
-  part, responses, open, onAnswer, onToggle, onFinishPart, onBack,
+  part, responses, open, onAnswer, onFinishPart, onBack,
 }: Props) {
   const indices = indicesOfPart(part);
   const answered = indices.filter((i) => responses[i] !== null).length;
@@ -33,17 +32,22 @@ export function QuizPart({
   const theme = PART_THEMES[part]!;
 
   // Set right before a pointer-triggered ANSWER, so the effect below knows
-  // the *next* `open` change is an auto-advance it should follow with focus
-  // — as opposed to a manual TOGGLE, or a keyboard ANSWER that leaves `open`
-  // where it was. Reset once consumed so a later TOGGLE never inherits it.
-  const pendingFocusRef = useRef(false);
+  // the next `open` change is an auto-advance to follow with a scroll — as
+  // opposed to a keyboard ANSWER, which leaves `open` where it was and must
+  // not yank the page while someone moves with Tab/arrows.
+  const pendingScrollRef = useRef(false);
+  const finishRef = useRef<HTMLDivElement>(null);
 
+  // Every question is on screen, so the flow is kept by scrolling: the next
+  // unanswered question glides to the middle of the screen, or — once the
+  // part is complete (open === null) — the end-of-part button does. Focus
+  // stays where it is. scrollIntoView is optional-called for jsdom.
   useEffect(() => {
-    if (!pendingFocusRef.current) return;
-    pendingFocusRef.current = false;
-    if (open !== null) {
-      document.getElementById(`quiz-row-toggle-${open}`)?.focus();
-    }
+    if (!pendingScrollRef.current) return;
+    pendingScrollRef.current = false;
+    const target = open !== null ? document.getElementById(`quiz-row-${open}`) : finishRef.current;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    target?.scrollIntoView?.({ block: "center", behavior: reduce ? "auto" : "smooth" });
   }, [open]);
 
   return (
@@ -100,17 +104,16 @@ export function QuizPart({
             index={index}
             text={ITEMS[index]!.text}
             value={responses[index] ?? null}
-            isOpen={open === index}
-            onToggle={() => onToggle(index)}
+            isCurrent={open === index}
             onAnswer={(v, advance) => {
-              if (advance) pendingFocusRef.current = true;
+              if (advance) pendingScrollRef.current = true;
               onAnswer(index, v, advance);
             }}
           />
         ))}
       </div>
 
-      <div className="flex justify-between gap-2">
+      <div ref={finishRef} className="flex justify-between gap-2">
         {part > 0 ? (
           <Button variant="secondary" onClick={onBack}>
             Quay lại

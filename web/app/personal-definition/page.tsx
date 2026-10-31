@@ -109,7 +109,6 @@ export default function PersonalDefinitionPage() {
           responses={state.responses}
           open={state.open}
           onAnswer={(index, value, advance) => dispatch({ type: "ANSWER", index, value, advance })}
-          onToggle={(index) => dispatch({ type: "TOGGLE", index })}
           onFinishPart={() => dispatch({ type: "FINISH_PART" })}
           onBack={() => dispatch({ type: "BACK" })}
         />

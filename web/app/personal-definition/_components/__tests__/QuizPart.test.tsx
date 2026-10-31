@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { QuizPart } from "../QuizPart";
 import { QUESTION_COUNT } from "../../_lib/likert";
 import { firstIndexOfPart } from "../../_lib/parts";
@@ -19,12 +19,15 @@ const base = {
   responses: responsesFor(1, []),
   open: null,
   onAnswer: () => {},
-  onToggle: () => {},
   onFinishPart: () => {},
   onBack: () => {},
 };
 
 const ALL_TEN = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+/** The radios of one row, by part-local position. */
+const rowRadios = (part: number, within_: number) =>
+  within(document.getElementById(`quiz-row-${firstIndexOfPart(part) + within_}`)!).getAllByRole("radio");
 
 describe("QuizPart", () => {
   it("names the part and its position", () => {
@@ -33,9 +36,10 @@ describe("QuizPart", () => {
     expect(screen.getByText("Cách bạn tiếp nhận")).toBeInTheDocument();
   });
 
-  it("renders all ten rows of the part at once", () => {
+  it("renders all ten questions with their scales at once", () => {
     render(<QuizPart {...base} />);
-    expect(screen.getAllByRole("button", { expanded: false })).toHaveLength(10);
+    expect(screen.getAllByRole("radio")).toHaveLength(50);
+    expect(screen.queryAllByRole("button", { expanded: false })).toHaveLength(0);
   });
 
   it("fills the bar by answers given, not by row position", () => {
@@ -44,10 +48,10 @@ describe("QuizPart", () => {
     expect(screen.getByText("3/10 câu")).toBeInTheDocument();
   });
 
-  it("expands only the open row", () => {
-    render(<QuizPart {...base} open={firstIndexOfPart(1) + 2} />);
-    expect(screen.getAllByRole("button", { expanded: true })).toHaveLength(1);
-    expect(screen.getAllByRole("radio")).toHaveLength(5);
+  it("marks only the current row as current", () => {
+    const { container } = render(<QuizPart {...base} open={firstIndexOfPart(1) + 2} />);
+    expect(container.querySelectorAll('[data-current="true"]')).toHaveLength(1);
+    expect(container.querySelector('[data-current="true"]')).toHaveAttribute("id", `quiz-row-${firstIndexOfPart(1) + 2}`);
   });
 
   it("keeps the end-of-part button disabled until all ten are answered", () => {
@@ -71,53 +75,58 @@ describe("QuizPart", () => {
   it("reports which row was answered, by absolute index, and that a pointer drove it", () => {
     const onAnswer = vi.fn();
     render(<QuizPart {...base} open={firstIndexOfPart(1)} onAnswer={onAnswer} />);
-    fireEvent.click(screen.getAllByRole("radio")[0]!, { detail: 1 });
-    expect(onAnswer).toHaveBeenCalledWith(firstIndexOfPart(1), 2, true);
+    fireEvent.click(rowRadios(1, 3)[0]!, { detail: 1 });
+    expect(onAnswer).toHaveBeenCalledWith(firstIndexOfPart(1) + 3, 2, true);
   });
 
   it("reports advance:false for a keyboard-driven answer", () => {
     const onAnswer = vi.fn();
     render(<QuizPart {...base} open={firstIndexOfPart(1)} onAnswer={onAnswer} />);
-    fireEvent.click(screen.getAllByRole("radio")[0]!); // detail 0 — keyboard/programmatic
+    fireEvent.click(rowRadios(1, 0)[0]!); // detail 0 — keyboard/programmatic
     expect(onAnswer).toHaveBeenCalledWith(firstIndexOfPart(1), 2, false);
   });
 
-  it("keeps the row's scale reachable through all five options on keyboard input", () => {
-    // Regression for the keyboard trap: a keyboard change (advance:false)
-    // must not collapse the row, so every option stays reachable.
+  it("scrolls the next question into view after a tap, smoothly", () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
     const open = firstIndexOfPart(1);
     const { rerender } = render(<QuizPart {...base} open={open} />);
-    expect(screen.getAllByRole("radio")).toHaveLength(5);
-    fireEvent.click(screen.getAllByRole("radio")[0]!); // keyboard, advance:false
-    // `open` is unchanged because the parent reducer would not have moved
-    // it either — re-render with the same prop to mirror that.
+    fireEvent.click(rowRadios(1, 0)[0]!, { detail: 1 }); // pointer
+    rerender(<QuizPart {...base} open={open + 1} responses={responsesFor(1, [0])} />);
+    expect(scroll).toHaveBeenCalledTimes(1);
+    expect(scroll.mock.contexts[0]).toHaveAttribute("id", `quiz-row-${open + 1}`);
+    expect(scroll.mock.calls[0]![0]).toMatchObject({ block: "center", behavior: "smooth" });
+  });
+
+  it("scrolls to the end-of-part button once the last question is answered", () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    const last = firstIndexOfPart(1) + 9;
+    const { rerender } = render(<QuizPart {...base} open={last} responses={responsesFor(1, [0, 1, 2, 3, 4, 5, 6, 7, 8])} />);
+    fireEvent.click(rowRadios(1, 9)[0]!, { detail: 1 });
+    rerender(<QuizPart {...base} open={null} responses={responsesFor(1, ALL_TEN)} />);
+    expect(scroll.mock.contexts[0]).toHaveTextContent("Xong phần 2");
+  });
+
+  it("does not scroll on keyboard answers — the person is moving with Tab/arrows", () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    const open = firstIndexOfPart(1);
+    const { rerender } = render(<QuizPart {...base} open={open} />);
+    fireEvent.click(rowRadios(1, 0)[0]!); // keyboard, advance:false
     rerender(<QuizPart {...base} open={open} responses={responsesFor(1, [0])} />);
-    expect(screen.getAllByRole("radio")).toHaveLength(5);
-    fireEvent.click(screen.getAllByRole("radio")[4]!);
-    expect(screen.getAllByRole("radio")).toHaveLength(5);
+    expect(scroll).not.toHaveBeenCalled();
   });
 
-  it("moves focus to the next row's toggle after a pointer-triggered auto-advance", () => {
+  it("does not steal focus when it scrolls", () => {
+    Element.prototype.scrollIntoView = vi.fn();
     const open = firstIndexOfPart(1);
-    const nextOpenIndex = open + 1;
     const { rerender } = render(<QuizPart {...base} open={open} />);
-    fireEvent.click(screen.getAllByRole("radio")[0]!, { detail: 1 }); // pointer
-    rerender(<QuizPart {...base} open={nextOpenIndex} responses={responsesFor(1, [0])} />);
-    expect(document.activeElement).toHaveAttribute("id", `quiz-row-toggle-${nextOpenIndex}`);
-  });
-
-  it("does not steal focus when the row change was keyboard-driven", () => {
-    const open = firstIndexOfPart(1);
-    render(<QuizPart {...base} open={open} />);
-    fireEvent.click(screen.getAllByRole("radio")[0]!); // keyboard, advance:false, open unchanged
-    expect(document.activeElement).not.toHaveAttribute("id", `quiz-row-toggle-${open + 1}`);
-  });
-
-  it("reports which row was toggled, by absolute index", () => {
-    const onToggle = vi.fn();
-    render(<QuizPart {...base} onToggle={onToggle} />);
-    fireEvent.click(screen.getAllByRole("button", { expanded: false })[4]!);
-    expect(onToggle).toHaveBeenCalledWith(firstIndexOfPart(1) + 4);
+    const radio = rowRadios(1, 0)[0]!;
+    radio.focus();
+    fireEvent.click(radio, { detail: 1 });
+    rerender(<QuizPart {...base} open={open + 1} responses={responsesFor(1, [0])} />);
+    expect(document.activeElement).toBe(radio);
   });
 
   it("shows the part's dimension mascot", () => {
