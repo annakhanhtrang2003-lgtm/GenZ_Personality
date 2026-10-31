@@ -43,6 +43,15 @@ describe("QuizPreview", () => {
     expect(screen.getAllByRole("article")).toHaveLength(PART_THEMES.length);
   });
 
+  it("sizes cards so ~2.5 show on mobile and all 4 from md up", () => {
+    render(<QuizPreview onStart={() => {}} />);
+    const items = screen.getByRole("list", { name: /4 phần của bài test/ }).querySelectorAll("li");
+    for (const li of items) {
+      expect(li.className).toContain("flex-[0_0_40%]");
+      expect(li.className).toContain("md:flex-[0_0_calc((100%-36px)/4)]");
+    }
+  });
+
   it("disables dot transitions under prefers-reduced-motion", () => {
     render(<QuizPreview onStart={() => {}} />);
     const dots = screen.getAllByRole("button", { name: /^Phần [0-9]$/ });
