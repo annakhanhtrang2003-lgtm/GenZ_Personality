@@ -69,32 +69,27 @@ export function shareModel(profile: PersonalProfile, host: string): ShareModel {
 }
 
 /**
- * File-safe name: accents and đ folded, anything but letters/digits becomes a
- * hyphen; a name with nothing left (or null) becomes `fallback`. Shared by the
- * solo card and the couple card so both name files the same way.
+ * `name_mbti_number.png`, e.g. "Khanh-Trang_ENTJ_4.png". The display name is
+ * made file-safe (accents and đ folded, anything but letters/digits becomes
+ * a hyphen); a name with nothing left falls back to "ban".
  */
-export function safeFileName(name: string | null, fallback = "ban"): string {
-  return (
-    (name ?? "")
+export function shareFileName(name: string, type: string, lifePath: number): string {
+  const safe =
+    name
       .normalize("NFD")
       .replace(/[̀-ͯ]/g, "")
       .replace(/đ/g, "d")
       .replace(/Đ/g, "D")
       .replace(/[^A-Za-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || fallback
-  );
+      .replace(/^-+|-+$/g, "") || "ban";
+  return `${safe}_${type}_${lifePath}.png`;
 }
 
-/** `name_mbti_number.png`, e.g. "Khanh-Trang_ENTJ_4.png". */
-export function shareFileName(name: string, type: string, lifePath: number): string {
-  return `${safeFileName(name)}_${type}_${lifePath}.png`;
-}
+const FONT = '"MoMo Trust", "SF Pro Rounded", -apple-system, "Segoe UI", Roboto, sans-serif';
+const INK = "#1e293b";
+const MUTED = "#475569";
 
-export const FONT = '"MoMo Trust", "SF Pro Rounded", -apple-system, "Segoe UI", Roboto, sans-serif';
-export const INK = "#1e293b";
-export const MUTED = "#475569";
-
-export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.arcTo(x + w, y, x + w, y + h, r);
@@ -104,7 +99,7 @@ export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w
   ctx.closePath();
 }
 
-export function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
+function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
   if (ctx.measureText(text).width <= maxWidth) return text;
   let t = text;
   while (t.length > 1 && ctx.measureText(t + "…").width > maxWidth) t = t.slice(0, -1);
@@ -212,7 +207,7 @@ export function drawShareCard(ctx: CanvasRenderingContext2D, m: ShareModel, masc
   ctx.fillText(fitText(ctx, m.footer, 960), W / 2, H - 34);
 }
 
-export function loadImage(src: string): Promise<HTMLImageElement> {
+function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);

@@ -6,8 +6,7 @@ import types from "./data/mbti-types.json";
 import templates from "./data/templates.json";
 
 export interface BuildProfileInput {
-  name: string;
-  university: string;
+  name: string;
   birth_date: string;
   full_name: string;
   responses: Response[];
@@ -83,8 +82,7 @@ export function buildProfile(input: BuildProfileInput): PersonalProfile {
 
   return {
     user: {
-      name: input.name,
-      university: input.university,
+      name: input.name,
       birth_date: input.birth_date,
     },
     zodiac,

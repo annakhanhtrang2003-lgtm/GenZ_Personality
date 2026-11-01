@@ -19,7 +19,6 @@ function fillOnboarding() {
   fireEvent.change(screen.getByPlaceholderText(/tên bạn muốn hiển thị/i), {
     target: { value: "Khánh" },
   });
-  fireEvent.change(screen.getByLabelText("Trường của bạn"), { target: { value: "ueh" } });
   fireEvent.change(screen.getByLabelText("Ngày"), { target: { value: "15" } });
   fireEvent.change(screen.getByLabelText("Tháng"), { target: { value: "6" } });
   fireEvent.change(screen.getByLabelText("Năm"), { target: { value: "2003" } });

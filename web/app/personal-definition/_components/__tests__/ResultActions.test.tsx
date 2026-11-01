@@ -14,7 +14,6 @@ import { ResultActions } from "../result/ResultActions";
 const profile = buildProfile({
   name: "Khanh",
   full_name: "Khanh",
-  university: "ueh",
   birth_date: "2003-03-14",
   responses: Array.from({ length: QUESTION_COUNT }, (_, i) => ((i % 5) - 2) as Response),
 });

@@ -7,7 +7,6 @@ import { firstIndexOfPart, PART_COUNT } from "../parts";
 
 const validInput = {
   name: "Khánh",
-  university: "ueh",
   birth_date: "2003-06-15",
 };
 
@@ -24,11 +23,11 @@ describe("validateInput", () => {
   });
 
   it("asks only for a display name — there is no full-name field any more", () => {
-    expect(Object.keys(initialState.input).sort()).toEqual(["birth_date", "name", "university"]);
+    expect(Object.keys(initialState.input).sort()).toEqual(["birth_date", "name"]);
   });
 
-  it("flags an unselected university", () => {
-    expect(validateInput({ ...validInput, university: "" }).university).toBeTruthy();
+  it("asks for no school: a name and a birth date are enough", () => {
+    expect(validateInput({ name: "Khánh", birth_date: "2003-06-15" })).toEqual({});
   });
 
   it("flags a missing or future birth date", () => {

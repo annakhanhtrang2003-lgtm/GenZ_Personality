@@ -39,7 +39,6 @@ function responsesForType(type: string): Response[] {
 
 const BASE = {
   name: "Khánh",
-  university: "UEH",
   full_name: "Nguyễn Thị Khánh Trang",
   responses: NEUTRAL(),
 };
@@ -280,7 +279,6 @@ describe("buildProfile", () => {
   it("exposes the Vietnamese label of the MBTI type", () => {
     const profile = buildProfile({
       name: "Khanh",
-      university: "ueh",
       birth_date: "2004-08-10",
       full_name: "Nguyen Khanh Trang",
       responses: Array.from({ length: 40 }, () => 0) as Response[],

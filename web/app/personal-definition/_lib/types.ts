@@ -45,7 +45,7 @@ export interface MBTIResult {
 }
 
 export interface PersonalProfile {
-  user: { name: string; university: string; birth_date: string };
+  user: { name: string; birth_date: string };
   zodiac: ZodiacResult;
   numerology: NumerologyResult;
   mbti: MBTIResult;

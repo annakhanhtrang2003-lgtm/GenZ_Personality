@@ -31,13 +31,9 @@ Thẻ chi tiết tách đôi: **Số chủ đạo của bạn** (diễn giải +
 
 Đã **bỏ** thẻ Điểm mạnh / Điểm cần cải thiện và nút "Khám phá lộ trình nghề nghiệp phù hợp" (cùng biến NEXT_PUBLIC_CAREERPATH_URL). Thẻ "Nghề nghiệp phù hợp" vẫn giữ.
 
-**Hợp nhau** (tính năng mới, ĐÃ CODE XONG 8/8 task, 2026-11-01): spec `docs/hop-nhau-spec.md`, plan `docs/superpowers/plans/2026-10-31-hop-nhau.md`. Route `/personal-definition/hop-nhau` (static).
-- Trang kết quả của A: nút "Xem bạn hợp với ai 💞" (Web Share / copy link, có ô "Ẩn tên của mình trong link") + "Hoặc thử nhanh với ngày sinh của bạn bè" (chế độ nhanh, ngày sinh bạn bè không rời máy).
-- B mở link: landing → chọn ngày sinh → điểm tạm Cung + Số Chủ Đạo + khoảng điểm dự kiến → "Làm test để mở khóa" (ngày sinh điền sẵn) → màn so sánh đầy đủ ở TRÊN kết quả riêng của B. Có "Gửi kết quả cho {A}" (link cặp `?i=&j=`, A mở là thấy cùng điểm), "Mời người khác", "Chia sẻ thẻ của hai đứa" (Story 1080×1920 / Vuông 1080×1080).
-- Link hỏng / bị cắt → màn "Link này hơi lạ á 🤔", không crash.
-- Riêng tư: URL chỉ chứa nhóm tính cách + cung + số; tên nằm sau `#`; không có ngày sinh ở đâu cả. Analytics `track()` vẫn là no-op (chưa chọn công cụ).
-- Ảnh xem trước link (OG) tĩnh 1200×630. Mascot dùng bản PNG `_assets/og/hero.png` vì Satori không đọc được webp.
-- Đã kiểm tra trên trình duyệt 390px + 360px: vòng A → B → link cặp cho cùng điểm, cùng câu nhận xét. 479 test, tsc, next build đều pass.
+**Hợp nhau (so sánh với bạn bè): ĐÃ GỠ BỎ (2026-11-01, Khanh yêu cầu).** Đã code xong 8/8 task (commit `de00f90`..`94ecae1`) rồi revert toàn bộ trong một commit. Muốn lấy lại: `git revert <commit gỡ bỏ>`. Spec `docs/hop-nhau-spec.md` và plan vẫn giữ.
+
+**Bỏ ô "Trường của bạn"** khỏi form (2026-11-01). Form giờ chỉ còn tên hiển thị + ngày sinh; `university` cũng bỏ khỏi state, profile và types. File `_lib/data/universities.json` (70 trường) vẫn giữ nhưng không dùng.
 
 **Chưa deploy lên Vercel.** Bản mới đang chạy ở localhost:3000 (production build). Live site vẫn là bản 10-01.
 

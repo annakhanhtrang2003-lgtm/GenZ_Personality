@@ -59,7 +59,6 @@ function buildDistinctResponses(): Response[] {
 
 export const profile = buildProfile({
   name: "Khánh",
-  university: "ueh",
   birth_date: "2003-06-15",
   full_name: "Nguyễn Thị Khánh Trang",
   responses: buildDistinctResponses(),

@@ -3,13 +3,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { OnboardingForm } from "../OnboardingForm";
 import type { Input } from "../../_lib/state";
 
-const emptyInput: Input = { name: "", university: "", birth_date: "" };
+const emptyInput: Input = { name: "", birth_date: "" };
 
 describe("OnboardingForm", () => {
-  it("renders a university option sourced from the data file", () => {
+  it("has no school field", () => {
     render(<OnboardingForm onBack={() => {}} input={emptyInput} errors={{}} onChange={() => {}} onSubmit={() => {}} />);
-    // UEH is the first university id in the data file.
-    expect(screen.getByRole("option", { name: /Kinh tế TP\.HCM/i })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Trường của bạn")).toBeNull();
+    expect(screen.queryByRole("option", { name: /Kinh tế TP.HCM/i })).toBeNull();
   });
 
   it("shows an error message when one is passed", () => {
@@ -49,7 +49,7 @@ describe("OnboardingForm", () => {
 
 describe("OnboardingForm birth date", () => {
   const withDate = (birth_date: string): Input => ({
-    name: "", university: "", birth_date,
+    name: "", birth_date,
   });
 
   it("offers day, month and year selects instead of a calendar popover", () => {

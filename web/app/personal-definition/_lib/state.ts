@@ -13,7 +13,6 @@ export interface Input {
    * only number shown anywhere — Số Chủ Đạo — comes from birth_date alone.
    */
   name: string;
-  university: string;
   birth_date: string; // YYYY-MM-DD
 }
 
@@ -43,7 +42,7 @@ export type Action =
 
 export const initialState: State = {
   phase: "intro",
-  input: { name: "", university: "", birth_date: "" },
+  input: { name: "", birth_date: "" },
   responses: Array.from({ length: QUESTION_COUNT }, () => null),
   part: 0,
   open: null,
@@ -83,7 +82,6 @@ export function validateInput(input: Input): InputErrors {
   } else if (normalizeVietnamese(input.name).length === 0) {
     errors.name = "Tên cần có ít nhất một chữ cái nhé.";
   }
-  if (!input.university) errors.university = "Chọn trường của bạn.";
   if (!input.birth_date) {
     errors.birth_date = "Chọn đủ ngày, tháng và năm.";
   } else {
@@ -157,7 +155,6 @@ export function reducer(state: State, action: Action): State {
       if (state.responses.some((r) => r === null)) return state;
       const profile = buildProfile({
         name: state.input.name,
-        university: state.input.university,
         birth_date: state.input.birth_date,
         full_name: state.input.name,
         responses: state.responses as Response[],
