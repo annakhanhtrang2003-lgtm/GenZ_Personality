@@ -7,23 +7,23 @@ const ZODIAC_SYMBOL: Record<string, string> = {
   "Nhân Mã": "♐", "Ma Kết": "♑", "Bảo Bình": "♒", "Song Ngư": "♓",
 };
 
-/** First sentence only — the tile is half the width; the details card has the rest. */
-function firstSentence(text: string): string {
-  return (text.split(/[.!?](?:\s|$)/)[0] ?? text).trim();
-}
-
+/** Label + one big highlighted value; the explanation lives in the details cards below. */
 function Tile({
-  testId, label, value, line, accent,
-}: { testId: string; label: string; value: string; line: string; accent: string }) {
+  testId, label, value, valueClass, accent,
+}: { testId: string; label: string; value: string; valueClass: string; accent: string }) {
   return (
     <div
       data-testid={testId}
-      className="flex-1 flex flex-col gap-1 rounded-2xl bg-white px-3 py-3 text-left shadow-[0_8px_20px_-12px_rgba(15,23,42,.25)]"
-      style={{ boxShadow: `0 0 0 1px ${accent}26, 0 8px 20px -12px rgba(15,23,42,.25)` }}
+      className="flex-1 flex flex-col items-center justify-center gap-1 rounded-2xl px-3 py-4 text-center"
+      style={{
+        backgroundColor: `${accent}14`,
+        boxShadow: `0 0 0 1.5px ${accent}40, 0 8px 20px -12px rgba(15,23,42,.25)`,
+      }}
     >
       <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b]">{label}</span>
-      <span className="text-[21px] leading-tight font-extrabold whitespace-nowrap" style={{ color: accent }}>{value}</span>
-      <span className="text-[13px] leading-snug text-[#334155] line-clamp-3">{line}</span>
+      <span className={`${valueClass} leading-none font-extrabold break-words`} style={{ color: accent }}>
+        {value}
+      </span>
     </div>
   );
 }
@@ -60,14 +60,14 @@ export function ResultHero({
             testId="hero-life-path"
             label="Số chủ đạo"
             value={String(numerology.life_path)}
-            line={firstSentence(numerology.interpretations.life_path)}
+            valueClass="text-[56px]"
             accent={accent}
           />
           <Tile
             testId="hero-zodiac"
             label={symbol ? `Cung hoàng đạo ${symbol}` : "Cung hoàng đạo"}
             value={zodiac.sun_sign}
-            line={zodiac.traits[0] ?? ""}
+            valueClass="text-[30px]"
             accent={accent}
           />
         </div>

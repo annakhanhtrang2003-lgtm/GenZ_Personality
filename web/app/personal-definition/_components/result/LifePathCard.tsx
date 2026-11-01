@@ -30,9 +30,6 @@ function FamousList({ title, people, accent }: { title: string; people: FamousPe
   );
 }
 
-const SOURCE_NOTE =
-  "Ngày sinh người nổi tiếng lấy từ nguồn công khai; số và cung của họ được tính bằng đúng công thức đã tính cho bạn.";
-
 /**
  * Số chủ đạo details: the meaning (from the birth date), how people tend to
  * see this number, and well-known people who share it. Only the life path
@@ -59,7 +56,6 @@ export function LifePathCard({ numerology, accent }: { numerology: NumerologyRes
           </Block>
         )}
         <FamousList title={`Cùng số ${n} với`} people={famousWithLifePath(n)} accent={accent} />
-        <p className="text-xs text-[#64748b]">{SOURCE_NOTE}</p>
       </div>
     </ResultCard>
   );
@@ -93,7 +89,6 @@ export function ZodiacCard({ zodiac, accent }: { zodiac: ZodiacResult; accent: s
           </div>
         </Block>
         <FamousList title={`Cùng cung ${sign} với`} people={famousWithSign(sign)} accent={accent} />
-        <p className="text-xs text-[#64748b]">{SOURCE_NOTE}</p>
       </div>
     </ResultCard>
   );
