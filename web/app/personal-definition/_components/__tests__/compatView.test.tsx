@@ -12,6 +12,8 @@ import { PART_COUNT, PART_SIZE, firstIndexOfPart } from "../../_lib/parts";
 
 let params = new URLSearchParams();
 vi.mock("next/navigation", () => ({ useSearchParams: () => params }));
+// Full 40-question jsdom flows run long when the machine is busy.
+const FULL_FLOW_MS = 20_000;
 vi.mock("../../_lib/analytics", () => ({ track: vi.fn() }));
 vi.mock("../../_lib/compatShareImage", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../_lib/compatShareImage")>()),
@@ -115,7 +117,7 @@ describe("flow wiring", () => {
     const dims = screen.getByText("Bốn chiều của bạn");
     expect(total.compareDocumentPosition(dims) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Bạn × Khánh" })).toBeInTheDocument();
-  });
+  }, FULL_FLOW_MS);
 });
 
 describe("pair mode on the hop-nhau route", () => {

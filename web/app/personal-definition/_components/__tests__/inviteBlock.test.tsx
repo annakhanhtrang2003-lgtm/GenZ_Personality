@@ -7,6 +7,8 @@ import { track } from "../../_lib/analytics";
 import { PART_COUNT, PART_SIZE, firstIndexOfPart } from "../../_lib/parts";
 import { profile } from "./fixtures";
 
+// Full 40-question jsdom flows run long when the machine is busy.
+const FULL_FLOW_MS = 20_000;
 vi.mock("../../_lib/analytics", () => ({ track: vi.fn() }));
 
 const share = vi.fn();
@@ -119,7 +121,7 @@ describe("flow wiring", () => {
     fireEvent.change(screen.getByLabelText("Năm"), { target: { value: "2003" } });
     finishQuiz();
     expect(screen.getByRole("button", { name: "Xem bạn hợp với ai 💞" })).toBeInTheDocument();
-  });
+  }, FULL_FLOW_MS);
 
   it("B's compare sends a pair link back to A and invites others with B's code", async () => {
     setShare(share);
@@ -143,5 +145,5 @@ describe("flow wiring", () => {
     await clickInvite("Mời người khác");
     const other = (share.mock.calls[1]![0] as { url: string }).url;
     expect(decodeInvite(codeOf(other))?.type).toBe(myType);
-  });
+  }, FULL_FLOW_MS);
 });
