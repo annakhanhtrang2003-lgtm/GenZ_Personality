@@ -6,11 +6,17 @@ import { PersonalDefinitionFlow } from "../PersonalDefinitionFlow";
 import { compatResult, type CompatPerson } from "../../_lib/compat";
 import { encodeInvite } from "../../_lib/inviteCode";
 import { track } from "../../_lib/analytics";
+import { act } from "@testing-library/react";
+import { compatFileName } from "../../_lib/compatShareImage";
 import { PART_COUNT, PART_SIZE, firstIndexOfPart } from "../../_lib/parts";
 
 let params = new URLSearchParams();
 vi.mock("next/navigation", () => ({ useSearchParams: () => params }));
 vi.mock("../../_lib/analytics", () => ({ track: vi.fn() }));
+vi.mock("../../_lib/compatShareImage", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../_lib/compatShareImage")>()),
+  renderCompatImage: vi.fn(async () => new Blob(["png"], { type: "image/png" })),
+}));
 
 type Typed = CompatPerson & { type: string };
 const A: Typed = { type: "INFP", sign: "Song Ngư", element: "Water", lifePath: 4 };
@@ -136,5 +142,44 @@ describe("pair mode on the hop-nhau route", () => {
   it("only i shows the landing", () => {
     open(`i=${codeA}`);
     expect(screen.getByRole("button", { name: "Xem độ hợp ngay" })).toBeInTheDocument();
+  });
+});
+
+describe("couple share card button", () => {
+  const order: string[] = [];
+  beforeEach(() => {
+    order.length = 0;
+    vi.mocked(track).mockImplementation((e) => void order.push(e));
+  });
+
+  it("shares a File named by compatFileName, click before success", async () => {
+    const share = vi.fn(async () => void order.push("share"));
+    Object.defineProperty(navigator, "share", { value: share, configurable: true });
+    Object.defineProperty(navigator, "canShare", { value: () => true, configurable: true });
+    render(<CompatView a={A} b={B} nameA="Khánh" nameB="An" mode="pair" />);
+    fireEvent.click(screen.getByRole("button", { name: "Vuông" }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Chia sẻ thẻ của hai đứa" }));
+    });
+    const file = (share.mock.calls[0] as unknown as [{ files: File[] }])[0].files[0]!;
+    expect(file.name).toBe(compatFileName("Khánh", "An", compatResult(A, B).total!));
+    expect(order.filter((e) => e !== "compat_full_view")).toEqual(["compat_share_click", "share", "compat_share_success"]);
+    expect(vi.mocked(track)).toHaveBeenCalledWith("compat_share_click", { format: "square" });
+    Object.defineProperty(navigator, "share", { value: undefined, configurable: true });
+    Object.defineProperty(navigator, "canShare", { value: undefined, configurable: true });
+  });
+
+  it("downloads without file sharing and does not count it as a share", async () => {
+    Object.defineProperty(navigator, "share", { value: undefined, configurable: true });
+    URL.createObjectURL = vi.fn(() => "blob:x");
+    URL.revokeObjectURL = vi.fn();
+    const clicked = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    render(<CompatView a={A} b={B} nameA="Khánh" nameB="An" mode="pair" />);
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Chia sẻ thẻ của hai đứa" }));
+    });
+    expect(clicked).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(track)).toHaveBeenCalledWith("compat_share_click", { format: "story" });
+    expect(vi.mocked(track)).not.toHaveBeenCalledWith("compat_share_success", expect.anything());
   });
 });

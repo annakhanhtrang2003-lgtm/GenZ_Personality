@@ -5,8 +5,92 @@ import { compatResult, type CompatPerson, type FactorLines } from "../../_lib/co
 import { track } from "../../_lib/analytics";
 import { poseForType, srcOf } from "../../_lib/mascot";
 import { TEMPERAMENTS, temperamentOf } from "../../_lib/temperament";
+import {
+  compatCardModel, compatFileName, renderCompatImage, type CompatFormat,
+} from "../../_lib/compatShareImage";
 
 type Typed = CompatPerson & { type: string };
+
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/** "Chia sẻ thẻ của hai đứa" with a Story / Vuông switch (spec §3 B3, §4.3). */
+function CoupleShare({ left, right, nameLeft, nameRight, accent, tint }: {
+  left: Typed; right: Typed; nameLeft: string | null; nameRight: string | null; accent: string; tint: string;
+}) {
+  const [format, setFormat] = useState<CompatFormat>("story");
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState("");
+
+  const onShare = async () => {
+    setBusy(true);
+    setStatus("");
+    track("compat_share_click", { format });
+    try {
+      const r = compatResult(left, right);
+      const model = compatCardModel(r, left, right, nameLeft, nameRight, window.location.host, { accent, tint });
+      const blob = await renderCompatImage(model, format);
+      const filename = compatFileName(nameLeft, nameRight, model.total);
+      const file = new File([blob], filename, { type: "image/png" });
+      if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        track("compat_share_success", { format, ...(r.tier ? { tier: r.tier.id } : {}) });
+      } else {
+        downloadBlob(blob, filename);
+        setStatus("Đã tải ảnh về máy, đăng story khoe liền nha!");
+      }
+    } catch (err) {
+      if (!(err instanceof DOMException && err.name === "AbortError")) {
+        setStatus("Chưa tạo được ảnh, bạn thử lại nhé.");
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="flex flex-col gap-3">
+      <div className="flex justify-center gap-2" role="group" aria-label="Kiểu ảnh">
+        {(["story", "square"] as const).map((f) => (
+          <button
+            key={f}
+            type="button"
+            aria-pressed={format === f}
+            onClick={() => setFormat(f)}
+            className="min-h-11 px-5 rounded-full text-sm font-bold border-2"
+            style={
+              format === f
+                ? { backgroundColor: accent, borderColor: accent, color: "#fff" }
+                : { backgroundColor: "#fff", borderColor: accent, color: accent }
+            }
+          >
+            {f === "story" ? "Story" : "Vuông"}
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={onShare}
+        disabled={busy}
+        className="w-full rounded-full py-4 px-4 text-[16px] font-bold text-white disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2"
+        style={{ backgroundColor: accent, outlineColor: accent }}
+      >
+        {busy ? "Đang tạo ảnh…" : "Chia sẻ thẻ của hai đứa"}
+      </button>
+      <p role="status" aria-live="polite" className="min-h-5 text-center text-sm text-[#475569]">
+        {status}
+      </p>
+    </section>
+  );
+}
 
 const CARD = "bg-white rounded-[24px] shadow-[0_6px_14px_rgba(148,163,184,.18)] px-5 py-5 flex flex-col gap-4";
 const COUNT_MS = 900;
@@ -163,6 +247,15 @@ export function CompatView({ a, b, nameA, nameB, mode, actions }: {
             </ul>
           </div>
         )}
+
+        <CoupleShare
+          left={left}
+          right={right}
+          nameLeft={mode === "viewer-is-b" ? nameB : nameA}
+          nameRight={mode === "viewer-is-b" ? nameA : nameB}
+          accent={accent}
+          tint={tint}
+        />
 
         {actions}
 
