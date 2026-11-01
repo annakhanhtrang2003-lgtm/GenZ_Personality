@@ -7,91 +7,24 @@ import {
 } from "../../_lib/inviteCode";
 import { track } from "../../_lib/analytics";
 import { TEMPERAMENTS, temperamentOf } from "../../_lib/temperament";
+import { ShareLinkButton } from "./ShareLinkButton";
+import { QuickCompat } from "./QuickCompat";
 
-export type ShareOutcome = "shared" | "copied" | "manual" | "cancelled";
-
-/** Web Share if available; else copy to clipboard; else hand back for manual copy. */
-export async function shareOrCopy(url: string, text: string): Promise<ShareOutcome> {
-  if (typeof navigator.share === "function") {
-    try {
-      await navigator.share({ url, text });
-      return "shared";
-    } catch (err) {
-      if (err instanceof DOMException && err.name === "AbortError") return "cancelled";
-      // Any other share failure falls through to the clipboard.
-    }
-  }
-  try {
-    if (!navigator.clipboard?.writeText) return "manual";
-    await navigator.clipboard.writeText(url);
-    return "copied";
-  } catch {
-    return "manual";
-  }
-}
-
-/** One share button plus its status line (copied note, or a box to copy by hand). */
-function ShareLinkButton({ label, accent, primary, build, onDone }: {
-  label: string;
-  accent: string;
-  primary: boolean;
-  build: () => { url: string; text: string };
-  onDone?: (outcome: ShareOutcome) => void;
-}) {
-  const [outcome, setOutcome] = useState<ShareOutcome | null>(null);
-  const [manualUrl, setManualUrl] = useState("");
-
-  const onClick = async () => {
-    const { url, text } = build();
-    const got = await shareOrCopy(url, text);
-    setManualUrl(got === "manual" ? url : "");
-    setOutcome(got);
-    onDone?.(got);
-  };
-
-  return (
-    <div className="flex flex-col gap-2">
-      <button
-        type="button"
-        onClick={onClick}
-        className="w-full rounded-full py-4 px-4 text-[16px] font-bold border-2 focus-visible:outline-2 focus-visible:outline-offset-2"
-        style={
-          primary
-            ? { backgroundColor: accent, borderColor: accent, color: "#fff", outlineColor: accent }
-            : { backgroundColor: "#fff", borderColor: accent, color: accent, outlineColor: accent }
-        }
-      >
-        {label}
-      </button>
-      <div role="status" aria-live="polite" className="min-h-5 text-center text-sm text-[#475569]">
-        {outcome === "copied" && "Đã copy link, dán cho bạn bè nha!"}
-        {outcome === "manual" && (
-          <div className="flex flex-col gap-1 text-left">
-            <input
-              readOnly
-              value={manualUrl}
-              aria-label="Link mời"
-              onFocus={(e) => e.currentTarget.select()}
-              className="w-full rounded-xl border border-worker-border px-3 py-2 text-[13px] text-[#1e293b]"
-            />
-            <span className="text-xs text-[#64748b]">Bấm giữ để copy link</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+export { shareOrCopy, type ShareOutcome } from "./ShareLinkButton";
 
 /**
  * "Hợp nhau" invite (spec §3 A1): shares a link carrying this profile's
  * type, sign and life path, with the display name after `#` unless hidden.
  */
-export function InviteBlock({ profile, accent, label = "Xem bạn hợp với ai 💞" }: {
+export function InviteBlock({ profile, accent, label = "Xem bạn hợp với ai 💞", showQuick = true }: {
   profile: PersonalProfile;
   accent: string;
   label?: string;
+  /** The A4 quick-mode toggle; off on the compare screen's "Mời người khác". */
+  showQuick?: boolean;
 }) {
   const [hidden, setHidden] = useState(false);
+  const [quick, setQuick] = useState(false);
   const group = TEMPERAMENTS[temperamentOf(profile.mbti.type)].name;
 
   return (
@@ -122,6 +55,18 @@ export function InviteBlock({ profile, accent, label = "Xem bạn hợp với ai
           if (got === "shared" || got === "copied") track("compat_invite_create", { hidden_name: hidden });
         }}
       />
+      {showQuick && (
+        <button
+          type="button"
+          aria-expanded={quick}
+          onClick={() => setQuick((q) => !q)}
+          className="self-center min-h-11 text-sm font-semibold underline underline-offset-4"
+          style={{ color: accent }}
+        >
+          Hoặc thử nhanh với ngày sinh của bạn bè
+        </button>
+      )}
+      {showQuick && quick && <QuickCompat me={profile} accent={accent} hideName={hidden} />}
     </section>
   );
 }

@@ -140,7 +140,7 @@ export function PersonalDefinitionFlow({
           actions={
             <div className="flex flex-col gap-2">
               <SendBackButton profile={state.profile} accent={accent} codeA={invite.code} nameA={invite.name} />
-              <InviteBlock profile={state.profile} accent={accent} label="Mời người khác" />
+              <InviteBlock profile={state.profile} accent={accent} label="Mời người khác" showQuick={false} />
             </div>
           }
         />
