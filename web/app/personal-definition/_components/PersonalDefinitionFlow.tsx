@@ -1,0 +1,153 @@
+"use client";
+
+import { useEffect, useMemo, useReducer, useState } from "react";
+import { initialState, reducer, validateInput } from "../_lib/state";
+import type { Input } from "../_lib/state";
+import { TEASER_PART } from "../_lib/parts";
+import { calculateZodiac } from "../_lib/zodiac";
+import { calculateNumerology } from "../_lib/numerology";
+import { summarizePart, revealedLetters } from "../_lib/partSummary";
+import { Hero } from "./onboarding/Hero";
+import { QuizPreview } from "./onboarding/QuizPreview";
+import { OnboardingForm } from "./OnboardingForm";
+import { QuizPart } from "./QuizPart";
+import { InterludeView } from "./InterludeView";
+import { SynthesisView } from "./SynthesisView";
+import { ResultActions } from "./result/ResultActions";
+import { ResultExtras } from "./result/ResultExtras";
+import { temperamentOf, TEMPERAMENTS } from "../_lib/temperament";
+import type { CompatPerson } from "../_lib/compat";
+
+/** An invite opened on /personal-definition/hop-nhau: who invited, and how to send back. */
+export interface FlowInvite {
+  person: CompatPerson & { type: string };
+  code: string;
+  name: string | null;
+}
+
+/**
+ * The whole test: intro, form, 4 parts with break screens, result. Mounted by
+ * /personal-definition with no props, and by the hop-nhau landing with an
+ * invite, which starts on the form with the birth date already chosen.
+ */
+export function PersonalDefinitionFlow({
+  invite,
+  initialBirthDate,
+  onExitInvite,
+}: {
+  invite?: FlowInvite;
+  initialBirthDate?: string;
+  onExitInvite?: () => void;
+} = {}) {
+  const [state, dispatch] = useReducer(reducer, undefined, () =>
+    invite
+      ? { ...initialState, phase: "onboarding" as const, input: { ...initialState.input, birth_date: initialBirthDate ?? "" } }
+      : initialState,
+  );
+  const [showErrors, setShowErrors] = useState(false);
+
+  const { birth_date, name } = state.input;
+  const inputErrors = validateInput(state.input);
+  const errors = showErrors ? inputErrors : {};
+
+  /**
+   * Zodiac and numerology depend only on onboarding input, so they are
+   * available long before the quiz ends — that is what lets the halfway
+   * teaser show real values with no partial MBTI scoring. The memo is
+   * gated on `validateInput` reporting no `name`/`birth_date` error —
+   * the same check START_QUIZ uses — rather than the looser
+   * "both fields non-empty" check this used to run on every keystroke.
+   * That looser check let a name with no mappable letters (e.g. "88")
+   * reach `calculateNumerology` while still onboarding, which throws for
+   * exactly that input. Gating on `validateInput` means neither call can
+   * throw here, using the same source of truth START_QUIZ already relies
+   * on instead of duplicating its rules.
+   */
+  const preview = useMemo(() => {
+    if (inputErrors.name || inputErrors.birth_date) return undefined;
+    return {
+      zodiac: calculateZodiac(birth_date),
+      numerology: calculateNumerology(birth_date, name),
+    };
+  }, [birth_date, name, inputErrors.name, inputErrors.birth_date]);
+
+  // Each screen (intro, onboarding, a quiz part, an interlude, synthesis) is a full
+  // page's worth of content; without this, finishing a part while scrolled
+  // down lands the next screen mid-scroll instead of at its top.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [state.phase, state.part]);
+
+  const handleStart = () => {
+    if (Object.keys(validateInput(state.input)).length > 0) {
+      setShowErrors(true);
+      return;
+    }
+    setShowErrors(false);
+    dispatch({ type: "START_QUIZ" });
+  };
+
+  if (state.phase === "intro") {
+    return (
+      <>
+        <Hero />
+        <QuizPreview onStart={() => dispatch({ type: "START_FORM" })} />
+      </>
+    );
+  }
+
+  if (state.phase === "onboarding") {
+    return (
+      <OnboardingForm
+        input={state.input}
+        errors={errors}
+        onChange={(field: keyof Input, value) => dispatch({ type: "SET_INPUT", field, value })}
+        onSubmit={handleStart}
+        onBack={() => (invite && onExitInvite ? onExitInvite() : dispatch({ type: "BACK" }))}
+      />
+    );
+  }
+
+  // The result paints its own full-bleed temperament background and
+  // constrains its content internally, so it sits outside the container.
+  if (state.phase === "synthesis" && state.profile) {
+    const { accent } = TEMPERAMENTS[temperamentOf(state.profile.mbti.type)];
+    return (
+      <SynthesisView
+        profile={state.profile}
+        actions={
+          <>
+            <ResultActions profile={state.profile} accent={accent} />
+            <ResultExtras accent={accent} />
+          </>
+        }
+      />
+    );
+  }
+
+  return (
+    <div className="px-5 py-6 max-w-[600px] mx-auto">
+      {state.phase === "quiz" && (
+        <QuizPart
+          part={state.part}
+          responses={state.responses}
+          open={state.open}
+          onAnswer={(index, value, advance) => dispatch({ type: "ANSWER", index, value, advance })}
+          onFinishPart={() => dispatch({ type: "FINISH_PART" })}
+          onBack={() => dispatch({ type: "BACK" })}
+        />
+      )}
+
+      {state.phase === "interlude" && (
+        <InterludeView
+          part={state.part}
+          summary={summarizePart(state.part, state.responses)}
+          letters={revealedLetters(state.part, state.responses)}
+          preview={state.part === TEASER_PART ? preview : undefined}
+          onContinue={() => dispatch({ type: "CONTINUE" })}
+          onBack={() => dispatch({ type: "BACK" })}
+        />
+      )}
+    </div>
+  );
+}
