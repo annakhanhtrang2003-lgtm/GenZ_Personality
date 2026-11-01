@@ -9,37 +9,13 @@ import { FACES, poseForType, srcOf } from "../../_lib/mascot";
 import { TEMPERAMENTS, temperamentOf } from "../../_lib/temperament";
 import { BirthDateSelects } from "../BirthDateSelects";
 import { PersonalDefinitionFlow } from "../PersonalDefinitionFlow";
+import { CompatView, ScoreBar } from "./CompatView";
 
 const PAGE = "min-h-[100svh] px-5 pt-6 pb-10 bg-[linear-gradient(180deg,#ffe4e6,#fdf2f8_50%,#ede9fe)]";
 const CARD = "bg-white rounded-[24px] shadow-[0_6px_14px_rgba(148,163,184,.18)] px-5 pt-5 pb-6";
 const CTA =
   "w-full rounded-full py-4 px-6 text-[17px] font-bold text-white bg-[linear-gradient(90deg,#ec4899,#fb7185)] shadow-[0_10px_20px_-6px_rgba(236,72,153,.45)] disabled:opacity-50 disabled:shadow-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f9a8d4]";
 const TEST_HOME = "/personal-definition";
-
-/**
- * One labelled score bar. The worker ProgressBar has no aria-label prop, so
- * this mirrors its markup (track token, rounded fill) with an accessible name.
- */
-export function ScoreBar({ label, score, accent }: { label: string; score: number; accent: string }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-baseline justify-between text-sm font-bold text-[#1e293b]">
-        <span>{label}</span>
-        <span style={{ color: accent }}>{score}</span>
-      </div>
-      <div
-        role="progressbar"
-        aria-label={label}
-        aria-valuenow={score}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        className="w-full h-2 rounded-full bg-worker-border overflow-hidden"
-      >
-        <div className="h-full rounded-full" style={{ width: `${score}%`, backgroundColor: accent }} />
-      </div>
-    </div>
-  );
-}
 
 function InviteError() {
   return (
@@ -64,10 +40,24 @@ type Stage = "landing" | "partial" | "test";
 export function HopNhauScreen() {
   const params = useSearchParams();
   const code = params.get("i");
+  const pairCode = params.get("j");
   const payload = useMemo(() => decodeInvite(code), [code]);
+  const pairPayload = useMemo(() => decodeInvite(pairCode), [pairCode]);
 
   if (!payload || !code) return <InviteError />;
+  // A pair link with either half broken is an error, never a half-filled compare.
+  if (pairCode !== null) {
+    if (!pairPayload) return <InviteError />;
+    return <PairView a={personFromInvite(payload)} b={personFromInvite(pairPayload)} />;
+  }
   return <InviteFlow code={code} inviter={personFromInvite(payload)} />;
+}
+
+/** ?i=&j= : the full compare, names from #n= and &m=. */
+function PairView({ a, b }: { a: CompatPerson & { type: string }; b: CompatPerson & { type: string } }) {
+  const [names, setNames] = useState<{ n: string | null; m: string | null }>({ n: null, m: null });
+  useEffect(() => setNames(readHashNames(window.location.hash)), []);
+  return <CompatView a={a} b={b} nameA={names.n} nameB={names.m} mode="pair" />;
 }
 
 function InviteFlow({ code, inviter }: { code: string; inviter: CompatPerson & { type: string } }) {

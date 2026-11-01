@@ -17,6 +17,8 @@ import { ResultActions } from "./result/ResultActions";
 import { ResultExtras } from "./result/ResultExtras";
 import { temperamentOf, TEMPERAMENTS } from "../_lib/temperament";
 import type { CompatPerson } from "../_lib/compat";
+import { personFromProfile } from "../_lib/inviteCode";
+import { CompatView } from "./compat/CompatView";
 
 /** An invite opened on /personal-definition/hop-nhau: who invited, and how to send back. */
 export interface FlowInvite {
@@ -112,7 +114,7 @@ export function PersonalDefinitionFlow({
   // constrains its content internally, so it sits outside the container.
   if (state.phase === "synthesis" && state.profile) {
     const { accent } = TEMPERAMENTS[temperamentOf(state.profile.mbti.type)];
-    return (
+    const result = (
       <SynthesisView
         profile={state.profile}
         actions={
@@ -122,6 +124,20 @@ export function PersonalDefinitionFlow({
           </>
         }
       />
+    );
+    if (!invite) return result;
+    // Invite flow: the compare comes first, B's own result right below (spec Q4).
+    return (
+      <>
+        <CompatView
+          a={invite.person}
+          b={personFromProfile(state.profile)}
+          nameA={invite.name}
+          nameB={state.profile.user.name}
+          mode="viewer-is-b"
+        />
+        <div id="my-result">{result}</div>
+      </>
     );
   }
 
