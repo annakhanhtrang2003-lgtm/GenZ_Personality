@@ -19,6 +19,7 @@ import { temperamentOf, TEMPERAMENTS } from "../_lib/temperament";
 import type { CompatPerson } from "../_lib/compat";
 import { personFromProfile } from "../_lib/inviteCode";
 import { CompatView } from "./compat/CompatView";
+import { InviteBlock, SendBackButton } from "./compat/InviteBlock";
 
 /** An invite opened on /personal-definition/hop-nhau: who invited, and how to send back. */
 export interface FlowInvite {
@@ -120,6 +121,7 @@ export function PersonalDefinitionFlow({
         actions={
           <>
             <ResultActions profile={state.profile} accent={accent} />
+            <InviteBlock profile={state.profile} accent={accent} />
             <ResultExtras accent={accent} />
           </>
         }
@@ -135,6 +137,12 @@ export function PersonalDefinitionFlow({
           nameA={invite.name}
           nameB={state.profile.user.name}
           mode="viewer-is-b"
+          actions={
+            <div className="flex flex-col gap-2">
+              <SendBackButton profile={state.profile} accent={accent} codeA={invite.code} nameA={invite.name} />
+              <InviteBlock profile={state.profile} accent={accent} label="Mời người khác" />
+            </div>
+          }
         />
         <div id="my-result">{result}</div>
       </>
