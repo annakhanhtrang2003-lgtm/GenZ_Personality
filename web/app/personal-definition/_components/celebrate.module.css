@@ -1,0 +1,74 @@
+/* Break-screen party: a one-shot confetti burst from the mascot plus slow
+   bubbles rising through the card. Purely decorative (the layer is
+   aria-hidden), positions come from inline CSS variables, and all of it is
+   switched off under reduced motion and during image capture. */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.confetti {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: pd-confetti 1500ms cubic-bezier(.15, .7, .3, 1) var(--delay, 0ms) both;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+}
+
+@keyframes pd-confetti {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(.2) rotate(0deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--rot)); }
+}
+
+.bubble {
+  position: absolute;
+  bottom: -14px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, .95), rgba(255, 255, 255, .4) 55%, rgba(255, 255, 255, .12));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .75);
+  opacity: 0;
+  animation: pd-bubble var(--dur, 4s) ease-in var(--delay, 0ms) infinite;
+}
+
+@keyframes pd-bubble {
+  0%   { opacity: 0;  transform: translateY(0) scale(.6); }
+  15%  { opacity: .9; }
+  100% { opacity: 0;  transform: translateY(-200px) translateX(var(--drift, 0px)) scale(1.05); }
+}
+
+/* The 🎉 next to the heading: one bouncy pop. */
+.cheer {
+  display: inline-block;
+  animation: pd-cheer 700ms cubic-bezier(.3, 1.6, .5, 1) 250ms both;
+}
+
+@keyframes pd-cheer {
+  0%   { opacity: 0; transform: scale(.2) rotate(-30deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+:global([data-capturing]) .confetti,
+:global([data-capturing]) .bubble {
+  display: none;
+}
+
+:global([data-capturing]) .cheer {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti, .bubble { display: none; }
+  .cheer { animation: none; }
+}
